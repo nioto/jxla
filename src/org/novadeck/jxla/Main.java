@@ -4,14 +4,14 @@
  *
  * The JXLA License, Version 1.0
  *
- * Copyright (c) 2002 The JXLA Project. All rights reserved.
+ * Copyright (c) 2002 JXLA. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,16 +19,16 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by 
- *        The JXLA Project (http://jxla.novadeck.org/)
+ *    if any, must include the following acknowledgment:
+ *       "This product includes software developed by
+ *        The JXLA Project Team (http://jxla.novadeck.org/)
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The name "JXLA" must not be used to endorse or promote
- *    products derived from this software without 
+ *    products derived from this software without
  *    prior written permission. For written permission,
- *     please contact nioto@users.sourceforge.net.
+ *    please contact nioto@users.sourceforge.net.
  *
  * 5. Products derived from this software may not be called "JXLA",
  *    nor may "JXLA" appear in their name, without prior written
@@ -51,13 +51,15 @@
  */
 
 
-/* 
- * File : $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/Main.java,v $
- *
- * Revision $Revision: 1.1 $  $Date: 2002/01/21 21:28:19 $  by $Author: nioto $
+/*
+ * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/Main.java,v $
+ * $Revision: 1.2 $
+ * $Date: 2002/01/21 21:39:10 $
+ * $Author: nioto $
  */
 
- 
+
+
 package org.novadeck.jxla;
 
 

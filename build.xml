@@ -1,0 +1,50 @@
+<!--
+ /** Info cvs
+ *
+ * $Source: /tmp/cvs/jxla/jxla/build.xml,v $
+ * $Date: 2002/01/21 21:39:09 $
+ * $Revision: 1.1 $
+ * $Author: nioto $
+ */
+-->
+
+<project name="jxla" default="dist">
+
+
+<target name="init">
+  <property name="build" value="build" />
+  <property name="libs"  value="lib" />
+  <property name="docs"  value="doc/api" />
+  <property name="classpath" value="lib/jakarta-oro.jar:lib/xerces.jar" />
+</target>
+
+<target name="prepare" depends="init">
+    <mkdir dir="${build}" />
+</target>
+
+<target name="prepareDocs" depends="init">
+    <mkdir dir="${docs}" />
+</target>
+
+
+<target name="compile" depends="prepare">
+   <javac optimize="off" debug="on" verbose="off" srcdir="${basedir}" classpath="${classpath}" includes="src/**/*.java" destdir="${build}" />
+</target>
+
+<target name="dist" depends="compile">
+   <jar compress="on" jarfile="${libs}/jxla.jar">
+      <fileset dir="${build}"/>
+   </jar>
+</target>
+
+<target name="clean" depends="init">
+    <delete dir="${build}" />
+    <delete dir="${dist}" />
+    <delete dir="${doc}" />
+</target>
+
+<target name="docs" depends="prepareDocs" >
+    <javadoc packagenames="org.novadeck.jxla.*" sourcepath="${basedir}/src" classpath="${classpath}" destdir="${docs}" author="true" version="true" private="false" use="true"/>
+</target>
+
+</project>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+
+<!--
+    Typical usage:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE jxla SYSTEM "caveats_jxla.dtd">
+
+    <jxla>
+    ...
+    </jxla>
+-->
+
+  <!ELEMENT user-agent (#PCDATA)>
+
+  <!ELEMENT directory (#PCDATA)>
+
+  <!ELEMENT notfound (#PCDATA)>
+
+  <!ELEMENT searchengines (engine)*>
+
+  <!ELEMENT localconfigclass (#PCDATA)>
+
+  <!ELEMENT logfiles (directory|format|filenameregexp)*>
+
+  <!ELEMENT uri (#PCDATA)>
+
+  <!ELEMENT dns (filecache|available)*>
+
+  <!ELEMENT keywords (#PCDATA)>
+
+  <!ELEMENT filenameregexp (#PCDATA)>
+
+  <!ELEMENT referers (#PCDATA)>
+
+  <!ELEMENT pages (extensions)*>
+
+  <!ELEMENT remote-hosts (#PCDATA)>
+
+  <!ELEMENT available (#PCDATA)>
+
+  <!ELEMENT summary-name (#PCDATA)>
+
+  <!ELEMENT format (regexp)*>
+
+  <!ELEMENT requestparameter (#PCDATA)>
+
+  <!ELEMENT jxla (pages|localconfigclass|dns|logfiles|max-values|searchengines|summary-name)*>
+
+  <!ELEMENT max-values (notfound|keywords|referers|uri|remote-hosts|user-agent)*>
+
+  <!ELEMENT filecache (#PCDATA)>
+
+  <!ELEMENT extensions (#PCDATA)>
+
+  <!ELEMENT engine (name|domain|requestparameter)*>
+
+  <!ELEMENT regexp (#PCDATA)>
+
+  <!ELEMENT domain (#PCDATA)>
+
+  <!ELEMENT name (#PCDATA)>
