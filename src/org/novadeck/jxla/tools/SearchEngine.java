@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/tools/SearchEngine.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.tools;
@@ -131,7 +131,7 @@ public class SearchEngine  extends SimpleData {
     }
     if (keyword != null)
       keyword = java.net.URLDecoder.decode(keyword);
-
+    
     return keyword;
   }
   //----------------
@@ -166,24 +166,21 @@ public class SearchEngine  extends SimpleData {
 
   public static String[] getKeywords( String host, String uri ) {
     if ( Utils.isComment( host ) ) return null;
-
     // need to update list for first use
     if ( (_counter % 1000) ==0 )  updateList();
     _counter  ++;
-
     String[] res  = null;
-
     int i=0;
     while ( ( i < _arrayEngines.length) && ( !_arrayEngines[i].match( host ) ) ) {
       i++;
     }
+    
     if (i < _arrayEngines.length) {
       SearchEngine se = _arrayEngines[i];
       res = new String[2];
       res[0]  = se.getName();
       res[1]  = se.getKeyword( uri );
     }
-
     if ( (res != null) && (res[1] != null))
       return res;
     else

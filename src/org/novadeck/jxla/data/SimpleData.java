@@ -53,15 +53,15 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/SimpleData.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
 
 import java.lang.*;
 
-public class SimpleData implements Comparable {
+public class SimpleData extends SerializableSimpleData implements Comparable {
 
   private long _counter;
 

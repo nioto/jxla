@@ -52,49 +52,72 @@
 
 
 /*
- * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/xml/Constants.java,v $
- * $Revision: 1.2 $
+ * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/tools/History.java,v $
+ * $Revision: 1.1 $
  * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
-package org.novadeck.jxla.xml;
 
+package org.novadeck.jxla.tools;
 
-public class Constants {
+import org.novadeck.jxla.data.Site;
+import org.novadeck.jxla.data.SiteHistory;
 
-  public static final String  ROOT                = "jxla";
+import java.io.*;
 
-  public static final String  LOGFILES_NODE       = "logfiles";
-  public static final String  LOGFILES_DIRECTORY  = "directory";
-  public static final String  LOGFILENAMES_RE     = "filenameregexp";
-  public static final String  LOGLINE             = "format";
-  public static final String  LOGLINE_RE          = "regexp";
-
-  public static final String  DNS_NODE            = "dns";
-  public static final String  DNS_AVAILABLE       = "available";
-  public static final String  DNS_FILECACHE       = "filecache";
-
-  public static final String  LOCALCONFIGCLASS_NODE = "localconfigclass";
-
-  public static final String  SEARCHENGINES_NODE  = "searchengines";
-  public static final String  SE_ENGINE           = "engine";
-  public static final String  SE_NAME             = "name";
-  public static final String  SE_PARAMETER        = "requestparameter";
-  public static final String  SE_DOMAIN           = "domain";
-
-  public static final String  PAGESEXTENSIONS_NODE= "pages";
-  public static final String  PAGESEXTENSIONS_EXT = "extensions";
-
-  public static final String  MAXVALUES_NODE      = "max-values";
-  public static final String  MAXVALUES_REFERERS  = "referers";
-  public static final String  MAXVALUES_KEYWORDS  = "keywords";
-  public static final String  MAXVALUES_USERAGENTS= "user-agent";
-  public static final String  MAXVALUES_REMOTE    = "remote-hosts";
-  public static final String  MAXVALUES_URI       = "uri";
-  public static final String  MAXVALUES_404       = "notfound";
-
-  public static final String  SUMMARY_PAGE_NAME   = "summary-name";
+public class History {
   
+  private static String fileHistory;
   
-  public static final String  HISTORY_FILENAME    = "history-filename";
+  public static void setHistoryFile( String f ) {
+    fileHistory = f ;
+    loadHistory();
+  }
+  public static String getHistoryFile( ) {
+    return fileHistory ;
+  }
+  
+  public static void loadHistory  ( ){
+    if ( fileHistory == null) return ;
+    try{
+      File f = new File( fileHistory );
+      if ( f.exists() ){
+        FileInputStream ostream   = new FileInputStream( f );
+        ObjectInputStream objIn   = new ObjectInputStream(ostream);
+        SiteHistory site;
+        System.out.println("available == "+objIn.available());
+        try{
+          while (true) {
+            site = (SiteHistory)objIn.readObject();
+            Site.addSite( site );
+            System.out.println("loading " + site.getName() );
+          }
+        } catch ( java.io.EOFException e ){
+        }
+        objIn.close();
+        ostream.close();
+      } else {
+        System.out.println("file doesnt exist");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("something wrong happens when reading file " + fileHistory + " ex=" +e.getMessage()  );
+    }
+  }
+  public static void saveHistory  ( ){
+    String[]  list = Site.getSiteHosts();
+    try{
+      File f = new File( fileHistory );
+      FileOutputStream ostream   = new FileOutputStream( fileHistory );
+      ObjectOutputStream objIn   = new ObjectOutputStream(ostream);
+      for ( int k=0; k < list.length; k++ ) {
+        Site s = Site.getSite( list[k] );
+        objIn.writeObject( s.getHistory() );
+      }
+      objIn.close();
+      ostream.close();
+    } catch (Exception e) {
+      System.out.println("cannot write to file " + fileHistory + " ex=" +e.getMessage()  );
+    }
+  }
 }

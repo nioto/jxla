@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/tools/DNSCache.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.tools;
@@ -99,7 +99,9 @@ public class DNSCache {
   private void setFileName( String file ) {
     _filename = file;
   }
-
+  public String getFileName() {
+    return _filename;
+  }
   public String gethostName( String ip ){
     Object obj  = _cache.get( ip );
     if (obj == null) {

@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/config/Config.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:10 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.config;
@@ -65,13 +65,14 @@ import java.io.File;
 import org.apache.oro.text.regex.Pattern;
 
 import org.novadeck.jxla.tools.DNSCache;
+import org.novadeck.jxla.tools.History;
 import org.novadeck.jxla.tools.SearchEngine;
 import org.novadeck.jxla.tools.Utils;
 import org.novadeck.jxla.data.RegexpData;
 
 
 public class Config {
-
+  
   public static AbstractSiteConfig siteConfig ;
   // pages extension
   public  static String[] pagesEntensions = null;
@@ -89,9 +90,9 @@ public class Config {
   public static int       maxNotFound;
   // summary page name
   public static String    summaryPageName = "index.xml";
-
+  
   public static String    indexFileName  = "index.xml";
-
+  
   // initialisze DNS informations
   public static void setDnsInfo( boolean  enable, String filename){
     dnsEnable = enable;
@@ -99,7 +100,7 @@ public class Config {
       dnsDumpFile = DNSCache.load( filename );
     }
   }
-
+  
   public static void dumpDnsCache(){
     if ( dnsEnable )
       dnsDumpFile.dump();
@@ -118,15 +119,13 @@ public class Config {
       throw new IllegalArgumentException("regexp for log files can't compile check it ");
     Collection col = new ArrayList();
     for (int i=0; i<list.length; i++) {
-      if ( Utils.match( list[i], pFiles ) )
+      if ( Utils.match( list[i], pFiles ) ) {
         col.add( directory + (directory.endsWith("/")?  "":"/") + list[i] );
-      else {
-        System.out.println( " file "+ list[i] +" doesnt match "   + regexp );
       }
     }
     logsFiles = (String[])col.toArray( new String[0]);
   }
-
+  
   // set extensions for pages
   public static void addPageExtension( String s ) {
     if ( pagesEntensions == null) {
@@ -139,7 +138,7 @@ public class Config {
       pagesEntensions = tmp;
     }
   }
-
+  
   public static void setMaxRefers( int max ){
     if (max >0)   maxRefers = max;
     else          throw new IllegalArgumentException("max referers is negative");
@@ -164,7 +163,7 @@ public class Config {
     if (max >0)   maxNotFound  = max;
     else          throw new IllegalArgumentException("max not found is negative");
   }
-
+  
   public static void setConfigClass( String s ) {
     try{
       Class c = Class.forName( s );
@@ -173,18 +172,74 @@ public class Config {
       e.printStackTrace();
     }
   }
-
+  
   public static void addLogLineFormat( String s )  {
     RegexpData.addRegexp( new RegexpData( s ) );
   }
-
+  
   public static void setSummaryPageName( String s )  {
-    System.out.println("setSummaryPageName( " + s +" )" );
     summaryPageName = s;
   }
-
+  
   public static void addSearchEngine( String name, String domain, String param )  {
     SearchEngine se = new SearchEngine( domain, param, name);
     SearchEngine.addSearchEngine( se );
+  }
+  
+  public static void displayConfig() {
+    
+    System.out.println("Your configuration is :");
+    System.out.println("");
+    System.out.print("Class to get infos from hostnames : " );
+    System.out.println(siteConfig.getClass().getName() );
+    
+    System.out.print("Requests with extensions in  [");
+    for (int i=0; i< pagesEntensions.length;i++){
+      System.out.print(pagesEntensions[i]);
+      if ( i<pagesEntensions.length -1) {
+        System.out.print(", ");
+      } else {
+        System.out.println(" ]");
+      }
+    }
+    
+    if ( dnsEnable ) {
+      System.out.print("Reverse dns id enable, ");
+      System.out.print("we will use the file " + dnsDumpFile.getFileName());
+      System.out.println("to cache oldest records");
+    }
+    
+    System.out.print("List of files to parse : [ " );
+    for (int i=0; i< logsFiles.length; i++) {
+      System.out.print(logsFiles[i]);
+      if ( i<logsFiles.length -1) {
+        System.out.print(", ");
+      } else {
+        System.out.println(" ]");
+      }
+    }
+    System.out.println("");
+    System.out.println("Max referers to output : " + maxRefers );
+    System.out.println("Max search engine keywords to output : " + maxKeywords );
+    System.out.println("Max user agents to output : " + maxAgents );
+    System.out.println("Max remote hosts to output : " + maxRemoteHosts );
+    System.out.println("Max uris to output : " + maxUris );
+    System.out.println("Max file not found error to output : " + maxNotFound );
+    System.out.println("Max referers to output : " + maxRefers );
+    System.out.println("Max referers to output : " + maxRefers );
+    
+    System.out.print("The summary file of the log analysis will be write to '");
+    System.out.print( summaryPageName );
+    System.out.println("'");
+    
+    System.out.print("The history will be write to '");
+    System.out.print( History.getHistoryFile() );
+    System.out.println("'");
+    
+    System.out.println("Default web page for your web server is '" + indexFileName+"'" );
+    
+    System.out.print("Available regexp for parsing logs are :" );
+    RegexpData.displayRegexp();
+    
   }
 }

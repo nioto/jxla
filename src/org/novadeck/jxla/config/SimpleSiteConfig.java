@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/config/SimpleSiteConfig.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:10 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.config;
@@ -67,9 +67,6 @@ import java.util.HashMap;
 
 
 /*
- * everydeck specific implementation of some
- * method usefull to retrieve different site specific
- * values
  *
  */
 

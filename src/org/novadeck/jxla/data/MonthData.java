@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/MonthData.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
@@ -88,8 +88,6 @@ public class MonthData extends GeneralLogData implements Comparable {
     dateTMP.setTimeZone( TimeZone.getTimeZone("Central Standard Time") );
     firstDay  = dateTMP.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY;
     int nDays = dateTMP.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
-    //System.out.println("first day for month " + month +"/" + (1900+_yearNumber) + " is " + firstDay );
-    //System.out.println("nb days for month " + month +"/" + (1900+_yearNumber) + " is " + nDays );
     _days = new ArrayList(nDays);
     for (int i=0; i< nDays; i++) {
       _days.add( new DayData(i, this) );
@@ -115,7 +113,6 @@ public class MonthData extends GeneralLogData implements Comparable {
   //-----------------------
   private String getMonthName() {
     return Statics.MONTH[_monthNumber];
-    //    return Long.toString( _monthNumber );
   }
   //-----------------------
   private String getFileName(){
@@ -138,6 +135,7 @@ public class MonthData extends GeneralLogData implements Comparable {
   }
   //-----------------------
   public void dumpDataToFile(String homePath, Date begin) {
+    System.out.println("dumping month");
     try{
       Output out = new Output( homePath + "/" + getFileName() );
       out.writeln( Statics.HEADER_XML );
@@ -153,16 +151,7 @@ public class MonthData extends GeneralLogData implements Comparable {
       out.writeln( "<url>"      + _hits.size()            + "</url>"  );
       out.writeln( "<remote_ip>"+ _remote_ip.size()       + "</remote_ip>"  );
 
-      /////////////////////
-      //  Traffic by site
-/*      long traffic = 0;
-      for (int i=0; i < _days.size(); i++) {
-        Object obj = _days.get( i );
-        if ( obj!= null){
-          traffic +=  ((DayData)obj).getTraffic();
-        }
-      }
- */
+
       out.writeln( "<traffic>"+ getTraffic() + "</traffic>"  );
 
       out.writeln( "</total>");
@@ -174,7 +163,7 @@ public class MonthData extends GeneralLogData implements Comparable {
 
       for (int i=0; i < _days.size(); i++) {
         Date current = new Date( _yearNumber , _monthNumber, 1+i, 23, 59, 59 );
-        if ( current.compareTo(today)<0 && current.compareTo( begin )>0 ) {
+        if ( current.before(today) && current.after(  begin ) ) {
           out.writeln(  "<day>");
           out.writeln(  "<number>" + (1+i) + "</number>" );
           Object obj = _days.get( i );
@@ -379,12 +368,13 @@ public class MonthData extends GeneralLogData implements Comparable {
 
   //--------
   private List computeHits() {
+    HashMap map = new HashMap( _hits.size(), 1 );
     Object[] objects = _hits.keySet().toArray();
     for (int i = 0; i < objects.length; i++ ) {
-      if ( !Utils.canOutputHit( objects[i].toString() ) )
-        _hits.remove( objects[i] );
+      if ( Utils.canOutputHit( objects[i].toString() ) )
+        map.put( objects[i], _hits.get(objects[i]) );
     }
-    return hashToList( _hits );
+    return hashToList( map );
   }
 
 }

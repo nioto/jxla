@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/Main.java,v $
- * $Revision: 1.2 $
- * $Date: 2002/01/21 21:39:10 $
+ * $Revision: 1.3 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 
@@ -66,6 +66,7 @@ package org.novadeck.jxla;
 import java.io.*;
 import java.util.*;
 import java.text.*;
+import java.util.zip.*;
 
 import org.novadeck.jxla.tools.*;
 import org.novadeck.jxla.config.*;
@@ -74,8 +75,8 @@ import org.novadeck.jxla.xml.XmlConfigurator;
 
 
 public class Main {
-
-
+  
+  
   public static void main(String args[]) {
     try{
       XmlConfigurator.configure( args[0] );
@@ -83,15 +84,18 @@ public class Main {
       e.printStackTrace();
       System.exit(1);
     }
-
+    if ( ( args.length > 1 ) && ( "viewConfig".equals( args[1] ) ) ) {
+      Config.displayConfig();
+      System.exit(1);
+    }
     Config.siteConfig.getMainDirForGeneralStat()     ;
     long  current   = 0;
     long  badlines  = 0;
-
+    
     long  beginTime = System.currentTimeMillis();
     Date NOW = new Date();
     NOW = new Date(NOW.getYear(), NOW.getMonth(), NOW.getDate() );
-
+    
     System.out.println("BEGINNING !! @ " + NOW );
     try {
       String files[] = Config.logsFiles ;
@@ -103,7 +107,18 @@ public class Main {
           System.out.println("file does not exist " + files[file] );
           continue;
         }
-        BufferedReader in = new BufferedReader( new FileReader( files[file] ) );
+        
+        BufferedReader in = null;
+        if ( files[file].endsWith( ".gz" )){
+          GZIPInputStream gzin = new GZIPInputStream( new FileInputStream( f ) );
+          InputStreamReader inStream = new InputStreamReader( gzin );
+          in = new BufferedReader( inStream );
+        }
+        else{
+          in = new BufferedReader( new FileReader( f ) );
+        }
+        
+        //        BufferedReader in = new BufferedReader( new FileReader( files[file] ) );
         String currentLine;
         System.out.println("Parsing file " + files[file] );
         boolean flag = true;
@@ -132,20 +147,20 @@ public class Main {
     catch (Throwable t) {
       t.printStackTrace();
     }
-
+    
     double time= ( (System.currentTimeMillis() - beginTime ) /100) /10;
     System.out.println( time + " seconds to parse " + current + " lines ");
-
+    
     System.out.println("dumping data");
     beginTime = System.currentTimeMillis();
-
+    
     String[]  list = Site.getSiteHosts();
     System.out.println(" nb of sites = "  +list.length);
     System.out.println("dumping data");
     for ( int k=0; k < list.length; k++ ) {
       StringBuffer sb = new StringBuffer();
       Site s = Site.getSite( list[k] );
-
+      System.out.println("dumping for site = " + s.getName());
       try {
         String statsDirectory = Config.siteConfig.getStatsDirectory( list[k] );
         File f = new File( statsDirectory );
@@ -155,6 +170,8 @@ public class Main {
             continue;
           }
         }
+        
+        System.out.println("dumping summary for site = " + s.getName());
         Output out  = new Output(  statsDirectory + "/"  + Config.summaryPageName) ;
         sb = s.getData( statsDirectory );
         out.write( sb.toString() );
@@ -164,6 +181,8 @@ public class Main {
         t.printStackTrace();
       }
     }
+    /*
+     *Dont use global information
     // search the first date to dump
     Date _begin = new Date();
     for ( int k=0; k < list.length; k++ ) {
@@ -173,9 +192,9 @@ public class Main {
     _begin.setHours(0);
     _begin.setMinutes(0);
     _begin.setSeconds(0);
-
+     
     Date _prev = new Date(1);
-
+     
     if ( Config.siteConfig.getMainDirForGeneralStat() != null ) {
       String currentDir = Config.siteConfig.getMainDirForGeneralStat() + "/" + (1+_begin.getMonth()) +"/";
       try{
@@ -193,7 +212,7 @@ public class Main {
             _month.writeln( Statics.HEADER_XML );
             _month.writeln( "<monthsummary>" );
             _month.writeln( "<name>"  + Statics.MONTH[_begin.getMonth()] + "</name>");
-
+     
             for ( int k=0; k < list.length; k++ ) {
               Site s = Site.getSite( list[k] );
               // month dumped data
@@ -226,12 +245,14 @@ public class Main {
         e.printStackTrace();
       }
     }
+     */
     time= ( (System.currentTimeMillis() - beginTime ) /100) /10;
     System.out.println("found "+ badlines + " bad lines ");
     System.out.println( time + " seconds to dimp data ");
-
+    
     Config.dumpDnsCache();
+    History.saveHistory();
     RegexpData.dumpCounters();
   }
-
+  
 }

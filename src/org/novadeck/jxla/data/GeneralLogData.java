@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/GeneralLogData.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
@@ -149,6 +149,14 @@ public class GeneralLogData implements Serializable  {
   }
   public void addTraffic(long l){
     _traffic = _traffic + l;
+  }
+  //============================================================================
+  public long getPages(){
+    return getCount(_pagesView);
+  }
+  //============================================================================
+  public long getFiles(){
+    return getCount( _files );
   }
 
   public long getHits(){

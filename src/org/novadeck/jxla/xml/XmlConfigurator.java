@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/xml/XmlConfigurator.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:07 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.xml;
@@ -65,24 +65,25 @@ import org.w3c.dom.*;
 import javax.xml.parsers.*;
 
 import org.novadeck.jxla.config.Config;
+import org.novadeck.jxla.tools.History;
 
 
 public class XmlConfigurator {
-
-
+  
+  
   public static void configure( String filepath ) throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
     Document doc = db.parse(filepath);
-
+    
     Node n = (Node)doc.getDocumentElement();
     if ( Constants.ROOT.equals( n.getNodeName() ) )
       configure( n );
     else
       throw new IllegalArgumentException(" check your config file, the root node is not jxla");
   }
-
-
+  
+  
   private static void configure( Node node ){
     NodeList list = node.getChildNodes();
     int len = list.getLength();
@@ -110,11 +111,13 @@ public class XmlConfigurator {
                   if ( Constants.SUMMARY_PAGE_NAME.equals(name)){
                     configureSummaryPageName(n);
                   } else
-                    System.out.println("not found " + name);
+                    if ( Constants.HISTORY_FILENAME.equals(name)){
+                      configureHistoryFileName(n);
+                    }
     }
   }
-
-
+  
+  
   private static void configureDNS( Node node ) {
     NodeList nlist = node.getChildNodes();
     int len = nlist.getLength();
@@ -128,12 +131,12 @@ public class XmlConfigurator {
       } else if ( Constants.DNS_FILECACHE.equals( name )) {
         fileDNS = n.getFirstChild().getNodeValue() ;
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.out.println("wrong node for DNS parameters :" + name );
+        System.err.println("wrong node for DNS parameters :" + name );
       }
     }
     Config.setDnsInfo( dnsenable, fileDNS );
   }
-
+  
   private static void configureLogFiles( Node node ) {
     NodeList nlist = node.getChildNodes();
     int len = nlist.getLength();
@@ -155,16 +158,16 @@ public class XmlConfigurator {
           if ( Constants.LOGLINE_RE.equals( name0 )) {
             Config.addLogLineFormat( n0.getFirstChild().getNodeValue() );
           } else if ( n0.getNodeType() == Node.ELEMENT_NODE ) {
-            System.out.println("wrong node for Log line format parameters :" + name0 );
+            System.err.println("wrong node for Log line format parameters :" + name0 );
           }
         }
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.out.println("wrong node for Log files parameters :" + name );
+        System.err.println("wrong node for Log files parameters :" + name );
       }
     }
     Config.setLogFiles( directory, regexp);
   }
-
+  
   private static void configureExtensionPages( Node node ) {
     NodeList nlist = node.getChildNodes();
     int len = nlist.getLength();
@@ -178,11 +181,11 @@ public class XmlConfigurator {
           Config.addPageExtension( st.nextToken().trim() );
         }
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.out.println("wrong node for extensions parameters :" + name );
+        System.err.println("wrong node for extensions parameters :" + name );
       }
     }
   }
-
+  
   private static void configureMaxValues( Node node ) {
     NodeList nlist = node.getChildNodes();
     int len = nlist.getLength();
@@ -208,17 +211,17 @@ public class XmlConfigurator {
         String val = n.getFirstChild().getNodeValue();
         Config.setMaxAgents( Integer.parseInt( val ) );
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.out.println("wrong node for max values parameters :" + name );
+        System.err.println("wrong node for max values parameters :" + name );
       }
     }
   }
-
-
+  
+  
   private static void configureConfigClass( Node node ) {
     Config.setConfigClass( node.getFirstChild().getNodeValue() );
   }
-
-
+  
+  
   private static void   configureSearchEngines( Node node ) {
     NodeList nlist = node.getChildNodes();
     String nameSE   = null;
@@ -241,23 +244,26 @@ public class XmlConfigurator {
           } else if ( Constants.SE_PARAMETER.equals( name0 )) {
             paramSE  = n0.getFirstChild().getNodeValue();
           } else if ( n0.getNodeType() == Node.ELEMENT_NODE ) {
-            System.out.println("wrong node for search engines parameters :" + name0 );
+            System.err.println("wrong node for search engines parameters :" + name0 );
           }
         }
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.out.println("wrong node for extensions parameters :" + name );
+        System.err.println("wrong node for extensions parameters :" + name );
       }
-      Config.addSearchEngine(nameSE, domainSE, paramSE );
+      if ( domainSE !=null && nameSE !=null && paramSE !=null)
+        Config.addSearchEngine(nameSE, domainSE, paramSE );
     }
   }
-
+  
   private static void configureSummaryPageName( Node node ) {
-    System.out.println("yep");
     Config.setSummaryPageName( node.getFirstChild().getNodeValue() );
   }
-
-
-
+  
+  private static void configureHistoryFileName( Node node ) {
+    History.setHistoryFile(node.getFirstChild().getNodeValue() );
+  }
+  
+  
   public static void main( String args[] ){
     try{
       configure( args[0] );

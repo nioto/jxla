@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/Line.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
@@ -75,15 +75,15 @@ public class Line {
   private Long    _status;
   private long    _size;
   private String  _user;
-
+  
   private String  _keywords = null;
-
+  
   public static final Line EMPTY_LINE = new Line();
-
+  
   private Line() {
     _host = null;
   }
-
+  
   public Line( String host, Date date, String remoteIp, String uri, String referer, String userAgent, String status, long size, String user) {
     _host       = Config.siteConfig.getRealHostName( host );
     if (_host == null){
@@ -121,35 +121,35 @@ public class Line {
               _keywords = re[1];
             }
           }
-          //            System.out.println();
         }
       }
     }
+    
     _referer    = referer;
     _userAgent  = userAgent;
     _status     = new Long(Integer.parseInt( status ));
     _size       = size;
     _user       = user;
   }
-
-
-
+  
+  
+  
   public Date getDate(){
     return  _date;
   }
-
+  
   public String getHost(){
     return _host;
   }
-
+  
   public String getURI(){
     return _uri;
   }
-
+  
   public int getMonth(){
     return _date.getMonth();
   }
-
+  
 /*  private void parseReferer( String referer ){
     _referer = referer;
     if (referer.indexOf( "http://"+_host + "/")<0)
@@ -159,41 +159,41 @@ public class Line {
   public String getReferer(){
     return this._referer;
   }
-
+  
   public String getKeywords(){
     return this._keywords;
   }
-
+  
   public String getVisitor(){
     return this._remoteIP;
   }
-
+  
   public Long getStatus(){
     return this._status;
   }
-
+  
   public String getUserAgent() {
     return this._userAgent;
   }
-
+  
   public long getSize() {
     return this._size;
   }
-
+  
   public String getUser() {
     return this._user;
   }
-
-
+  
+  
 /*    public static final boolean isComment( String s ) {
       return ( s ==null || s.length()==0 || s.charAt(0) == '#' );
     }
  */
-
+  
   public boolean isLineEmpty(){
     return (this._host == null );
   }
-
+  
   public String toString(){
     StringBuffer sb = new StringBuffer();
     sb.append( "date==" + _date + "\n");
@@ -206,5 +206,5 @@ public class Line {
     sb.append( "agent ==" + _userAgent+ "\n");
     return sb.toString();
   }
-
+  
 }

@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/Site.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
@@ -70,33 +70,50 @@ import org.novadeck.jxla.Statics;
 public class Site {
   // all sites available
   private static HashMap _sites = new HashMap();
-
+  
   // local variables
   //--------
   private String  _name;
   private List _months = new ArrayList();
-
-  public Date beginLogDate = null;
-
+  
+  private Date lastLogDate  = null;
+  private Date beginLogDate  = null;
+  
+  SiteHistory _history      = null;
   //============================================================================
   //--------
   public Site( String str ) {
-    System.out.println(" creating " + str ) ;
     _name      = str;
   }
-
+  
   public String getName() {
     return _name;
   }
   //============================================================================
+  private void setHistory( SiteHistory history ) {
+    this._history                 = history;
+    this.lastLogDate              = history.getLastRecordDate();
+    this.beginLogDate             = history.getFirstRecordDate();
+    _months.add( history.getLastMonth() );
+  }
+  
+  //============================================================================
   //--------
   public void addHit( Line l ) {
+    Date currentLineDate = l.getDate();
     if (beginLogDate == null) {
       beginLogDate = l.getDate();
     }
-    int mm = l.getDate().getMonth() ;
-    int yy = l.getDate().getYear()  ;
-
+    if ( (_history != null) && _history.allReadyParse( currentLineDate ) ) {
+      //System.out.println("here" + currentLineDate + " -- " + _history.lastRecord );
+      return ;
+    }
+    if ( (lastLogDate == null) || currentLineDate.after(lastLogDate) ) {
+      lastLogDate = currentLineDate;
+    }
+    int mm = currentLineDate.getMonth() ;
+    int yy = currentLineDate.getYear()  ;
+    
     MonthData month = getMonth( mm, yy );
     if (month == null) {
       month = new MonthData( mm , yy );
@@ -104,8 +121,8 @@ public class Site {
     }
     month.addLine( l );
   }
-
-
+  
+  
   private MonthData getMonth( int month, int year ) {
     for (int i=_months.size()-1; i>=0  ; i--) {
       MonthData tmp = (MonthData)_months.get( i );
@@ -115,8 +132,8 @@ public class Site {
     }
     return null;
   }
-
-
+  
+  
   //============================================================================
   public StringBuffer getMonthData( int month, int year ) {
     MonthData monthData = getMonth( month, year );
@@ -133,7 +150,6 @@ public class Site {
   public StringBuffer getDayData( int day, int month, int year ) {
     MonthData monthData = getMonth( month, year );
     if (monthData == null) return null;
-    System.out.println("found month !!");
     return monthData.getDayData( day, _name );
   }
   //============================================================================
@@ -142,7 +158,28 @@ public class Site {
     Site s = getSite( l.getHost() );
     s.addHit( l );
   }
-  //--------
+  
+  //============================================================================
+  public SiteHistory getHistory() {
+    if ( _history == null ){
+      _history = new SiteHistory( _name, null, beginLogDate );
+    }
+    Iterator ite = _months.iterator();
+    Object current = null;
+    while ( ite.hasNext() ) {
+      current = ite.next() ;
+      if ( ite.hasNext() ) {
+        _history.addMonthSummary( (MonthData) current );
+      } else {
+        _history.setLastMonth( (MonthData) current );
+      }
+    }
+    _history.updateLastRecordDate( this.lastLogDate );
+    return this._history;
+  }
+  
+  //============================================================================
+  // XML creation
   public StringBuffer getData(String statsDirectory) {
     Collections.sort( _months );
     StringBuffer output = new StringBuffer( Statics.HEADER_XML );
@@ -151,6 +188,10 @@ public class Site {
     MonthData m = (MonthData)_months.get( 0 );
     int currentMonth  = m.getMonth()  ;
     int currentYear   = m.getYear()   ;
+    // summary data from history
+    if ( _history != null ) {
+      output.append( _history.getSummary() ) ;
+    }
     for ( int i =0; i< _months.size(); i++) {
       m = (MonthData)_months.get( i );
       //////////////////////////////////////////////////////////////////////////
@@ -172,8 +213,8 @@ public class Site {
     output.append( "</site>\n" );
     return output;
   }
-
-
+  
+  
   //============================================================================
   //--------
   public static Site getSite( String host ){
@@ -195,8 +236,16 @@ public class Site {
     Arrays.sort( res );
     return res;
   }
-
-
+  //--------
+  public static void addSite( SiteHistory hist ){
+    Site  s = (Site)_sites.get( hist.getName() );
+    if ( s ==null) {
+      s = new Site( hist.getName() );
+      _sites.put( hist.getName(), s);
+    }
+    s.setHistory( hist );
+  }
+  
   //////////////////////////////////////////////////////////////////////////////
-
+  
 }

@@ -53,8 +53,8 @@
 
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/RegexpData.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:11 $
+ * $Revision: 1.2 $
+ * $Date: 2002/02/10 15:05:06 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
@@ -70,7 +70,6 @@ import org.novadeck.jxla.config.*;
 import java.text.SimpleDateFormat;
 
 import java.util.*;
-
 
 
 
@@ -254,7 +253,6 @@ public class RegexpData extends SimpleData {
     catch(MalformedPatternException e) {
       quit( " malformed regexp  for "  + s  + "////" + regexp.toString());
     }
-    System.out.println("regexp==" + regexp.toString() );
   }
 
   //============================================================================
@@ -277,6 +275,8 @@ public class RegexpData extends SimpleData {
   }
 
   //============================================================================
+  /**
+   * @return  */  
   public String getHost()     {   return getExpr( _host );    }
 
   public String getRemoteIP() {
@@ -332,8 +332,8 @@ public class RegexpData extends SimpleData {
   //============================================================================
   //----------------
   private void quit(String s ) {
-    System.out.println("ERROR : " + s);
-    System.out.println("exiting ");
+    System.err.println("ERROR : " + s);
+    System.err.println("exiting ");
     System.exit(0);
   }
 
@@ -401,7 +401,7 @@ public class RegexpData extends SimpleData {
         l = new Line( re.getHost(), re.getDate(), re.getRemoteIP(), re.getURI(), re.getReferer(), re.getAgent(), re.getStatus(), re.getSize(), re.getUser() );
         _lastMatched = re;
       }
-    } catch ( Throwable t ) {}
+    } catch ( Throwable t ) {/*t.printStackTrace();*/}
     return l;
   }
 
@@ -410,6 +410,12 @@ public class RegexpData extends SimpleData {
     for (int i=0; i<_arrayRe.length; i++) {
       System.out.println("re  = " +_arrayRe[i].initialRegexp);
       System.out.println("match " + _arrayRe[i].getCount());
+    }
+  }
+  //==========================================
+  public final static void displayRegexp(){
+    for (int i=0; i<_arrayRe.length; i++) {
+      System.out.println(_arrayRe[i].initialRegexp);
     }
   }
 
