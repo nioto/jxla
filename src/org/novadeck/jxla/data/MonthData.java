@@ -1,60 +1,7 @@
 /*
- * JXLA is released under an Apache-style license.
- * ==============================================
- *
- * The JXLA License, Version 1.0
- *
- * Copyright (c) 2002 JXLA. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
- *       "This product includes software developed by
- *        The JXLA Project Team (http://jxla.novadeck.org/)
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
- *
- * 4. The name "JXLA" must not be used to endorse or promote
- *    products derived from this software without
- *    prior written permission. For written permission,
- *    please contact nioto@users.sourceforge.net.
- *
- * 5. Products derived from this software may not be called "JXLA",
- *    nor may "JXLA" appear in their name, without prior written
- *    permission of the JXLA Team.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE TM4J PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- */
-
-
-/*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/MonthData.java,v $
- * $Revision: 1.2 $
- * $Date: 2002/02/10 15:05:06 $
+ * $Revision: 1.3 $
+ * $Date: 2005/01/06 13:18:54 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
@@ -64,10 +11,12 @@ import java.util.*;
 
 import org.novadeck.jxla.tools.*;
 import org.novadeck.jxla.config.*;
-import org.novadeck.jxla.Statics;
+import org.novadeck.jxla.Constants;
 
 
 public class MonthData extends GeneralLogData implements Comparable {
+
+  private static final long serialVersionUID = -2485540634100516741L;
 
   //--------
   private List   _days ;
@@ -101,7 +50,7 @@ public class MonthData extends GeneralLogData implements Comparable {
 
   //--------
   public void addLine( Line l ) {
-    int i = l.getDate().getDate() - 1 ;
+    int i = l.getLogDate().getDate() - 1 ;
     DayData day = (DayData)_days.get( i );
     day.addLine( l );
   }
@@ -112,7 +61,7 @@ public class MonthData extends GeneralLogData implements Comparable {
   }
   //-----------------------
   private String getMonthName() {
-    return Statics.MONTH[_monthNumber];
+    return Constants.getMonth (_monthNumber);
   }
   //-----------------------
   private String getFileName(){
@@ -130,15 +79,17 @@ public class MonthData extends GeneralLogData implements Comparable {
     output.append( "<hits>"   + getCount( _hits       ) + "</hits>\n"   );
     output.append( "<files>"  + getCount( _files      ) + "</files>\n"  );
     output.append( "<pages>"  + getCount( _pagesView  ) + "</pages>\n"  );
+    output.append( "<traffic>" + getTraffic() + "</traffic>\n"  );
     output.append( "</month>\n" );
     return output;
   }
   //-----------------------
   public void dumpDataToFile(String homePath, Date begin) {
-    System.out.println("dumping month");
+    if (Config.DEBUG) 
+      System.out.println("dumping month " + toString()  );
     try{
       Output out = new Output( homePath + "/" + getFileName() );
-      out.writeln( Statics.HEADER_XML );
+      out.writeln( Constants.HEADER_XML );
       out.writeln( "<month>");
       out.writeln( "<name>" + getMonthName() + "</name>");
       out.writeln( "<year>" + (1900+_yearNumber) + "</year>");
@@ -194,7 +145,7 @@ public class MonthData extends GeneralLogData implements Comparable {
       for (int i=0; i<7; i++){
         out.writeln( "<day>");
         /////////////////////////////////////////////////////////////////////
-        out.writeln( "<name>" + Statics.DAYS[i]         + "</name>" );
+        out.writeln( "<name>" + Constants.getDay (i) + "</name>" );
         out.writeln( "<number>" + i  + "</number>" );
         out.writeln( "<hits>" +total[i][0] +"</hits>");
         out.writeln( "<files>"+total[i][1] +"</files>");
@@ -203,10 +154,7 @@ public class MonthData extends GeneralLogData implements Comparable {
       }
       out.writeln( "</hitsbydayofweek>");
 
-
-
-
-
+      
       List col = null;
       int number ;
       /////////////////////
@@ -246,7 +194,7 @@ public class MonthData extends GeneralLogData implements Comparable {
       out.writeln( "<referers>");
       for ( Iterator ite = col.iterator(); ite.hasNext() && number<Config.maxRefers ;number++){
         StringData d = (StringData)ite.next();
-        out.writeln("<element><value><![CDATA["+d.getData()+"]]></value><count>"+d.getCount()+"</count></element>");
+        out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
       }
       out.writeln( "</referers>");
       /////////////////////
@@ -256,7 +204,7 @@ public class MonthData extends GeneralLogData implements Comparable {
       out.writeln( "<keywords>");
       for ( Iterator ite = col.iterator(); ite.hasNext() && number<Config.maxRefers ;number++){
         StringData d = (StringData)ite.next();
-        out.writeln("<element><value><![CDATA["+d.getData()+"]]></value><count>"+d.getCount()+"</count></element>");
+        out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
       }
       out.writeln( "</keywords>");
 
@@ -267,10 +215,68 @@ public class MonthData extends GeneralLogData implements Comparable {
       out.writeln( "<users_ips>");
       for ( Iterator ite = col.iterator(); ite.hasNext() && number<Config.maxRemoteHosts ;number++){
         StringData d = (StringData)ite.next();
-        out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
+        String value = d.getData ();
+        if ( Config.dnsEnable){
+          if ( value.startsWith ( "<![CDATA[" ) ) {
+              value  = value.substring ( "<![CDATA[".length (), value.length () - "]]>".length () );
+          }
+          value   = Config.dnsDumpFile.gethostName( value );
+        }       
+        out.writeln("<element><value>"+value+"</value><count>"+d.getCount()+"</count></element>");
       }
       out.writeln( "</users_ips>");
 
+      /*
+       *
+       */
+      HashMap map = new HashMap();
+      if (Config.DEBUG) 
+      {
+        System.out.println("working on Countries");
+        System.out.println("col.size=="+col.size ());
+      }
+      for ( Iterator ite = col.iterator(); ite.hasNext() ;){
+        StringData d = (StringData)ite.next();
+        String value = d.getData();
+        if ( value.startsWith ( "<![CDATA[" ) )
+        {
+            value  = value.substring ( "<![CDATA[".length (), value.length () - "]]>".length () );
+        }
+        String country ;
+        try
+        {
+            java.net.InetAddress ia = java.net.InetAddress.getByName ( value );
+            Locale l = net.wetters.InetAddressLocator.getLocale ( ia );
+            country = l.getDisplayCountry ();
+        }
+        catch (java.net.UnknownHostException e)
+        {
+          country ="";
+        }
+        SimpleData data = (SimpleData)map.get ( country ) ;
+        if ( data == null)
+        {
+            data = new StringData( country  );
+            map.put( country, data );
+        }
+        data.add( d.getCount() );        
+      }
+      if (Config.DEBUG) 
+        System.out.println("map.size="+ map.size ());
+      col = hashToList( map );
+      if (Config.DEBUG) 
+        System.out.println("col.size"+col.size ());
+      number = 0;
+      out.writeln( "<users_countries>");
+      for ( Iterator ite = col.iterator(); ite.hasNext() ;){
+        StringData d = (StringData)ite.next();
+        out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
+      }
+      out.writeln( "</users_countries>");
+      
+      /*
+       *
+       */
       /////////////////////
       // remote IP
       col = hashToList( _users );
@@ -278,21 +284,45 @@ public class MonthData extends GeneralLogData implements Comparable {
       out.writeln( "<users>");
       for ( Iterator ite = col.iterator(); ite.hasNext() ;number++){
         StringData d = (StringData)ite.next();
-        out.writeln("<element><value><![CDATA["+ Config.siteConfig.getRealUserInfo( d.getData() )+"]]></value><count>"+d.getCount()+"</count></element>");
+        out.writeln("<element><value>"+ Config.siteConfig.getRealUserInfo( d.getData() )+"</value><count>"+d.getCount()+"</count></element>");
       }
       out.writeln( "</users>");
-
-      /////////////////////
-      // remote IP
-      col = computeUserAgent();
-      number = 0;
-      out.writeln( "<user_agents>");
-      for ( Iterator ite = col.iterator(); ite.hasNext() && number<Config.maxAgents;number++){
-        StringData d = (StringData)ite.next();
-        out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
+      try
+      {
+        /////////////////////
+        // remote IP
+        HashMap tmp [] = computeUserAgent2 ();
+      
+        if ( Config.maxBrowsers >0)
+        {
+          col = hashToList( tmp[0] );
+          number = 0;
+          out.writeln( "<user_agents>");
+          for ( Iterator ite = col.iterator(); ite.hasNext() && number<Config.maxBrowsers;number++){
+            StringData d = (StringData)ite.next();
+            out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
+          }
+          out.writeln( "</user_agents>");
+        }
+        ////////
+        if ( Config.maxOS > 0)
+        {
+          col = hashToList( tmp[1] );
+          number = 0;
+          out.writeln( "<platforms>");
+          for ( Iterator ite = col.iterator(); ite.hasNext() && number<Config.maxOS;number++){
+            StringData d = (StringData)ite.next();
+            out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
+          }
+          out.writeln( "</platforms>");
+        }
+      //////////////////////
       }
-      out.writeln( "</user_agents>");
-
+      catch (Throwable t )
+      {
+          t.printStackTrace();
+      }
+      
 
       out.writeln( "</month>");
       out.close();
@@ -314,34 +344,83 @@ public class MonthData extends GeneralLogData implements Comparable {
     List list   = new ArrayList();
     for (Iterator ite = set.iterator(); ite.hasNext(); ) {
       Object obj = ite.next();
+      if (!( obj instanceof java.lang.String )) {
+          System.err.println("################################################################");
+          System.err.println("################################################################");
+          System.err.println( "found data that is not a string : " +obj.getClass() );
+          System.err.println("################################################################");
+          System.err.println("################################################################");
+          
+      }
       list.add( new StringData( obj.toString(), ((SimpleData)map.get(obj)).getCount()) );
     }
     Collections.sort( list );
     return list;
   }
 
-
   //--------
-  private List computeUserAgent() {
+  private HashMap[] computeUserAgent2() {
     Set set = _userAgents.keySet();
-    HashMap newMap  =  new HashMap();
-    for (Iterator ite = set.iterator(); ite.hasNext(); ) {
-      Object obj = ite.next();
-      String ua = Utils.getUserAgent( obj.toString() );
-      if ( ua == null)
+    HashMap browsers = new HashMap();
+    HashMap oses = new HashMap();
+    for (Iterator ite = set.iterator(); ite.hasNext(); )
+    {
+      Object key = ite.next();
+      //String ua = Utils.getUserAgent( obj.toString() );
+      if ( key == null)
         continue;
-      if ( newMap.containsKey( ua ) ){
-        SimpleData data = (SimpleData)newMap.get(ua);
-        data.add( ((SimpleData)_userAgents.get(obj)).getCount());
-      } else {
-        Object data = _userAgents.get(obj);
-        newMap.put( ua, data);
+      
+      String ua = key.toString ().toLowerCase ();
+      String bot  = org.novadeck.jxla.tools.Bots.getBot ( ua );
+      String browser ;
+      String os ;
+      if ( bot == null )
+      {
+          org.nioto.browser.Browser b = new org.nioto.browser.Browser( ua );
+          // check browsers
+          browser = b.getShortName () + "-" + b.getMajVersion () ;//+ b.getMinVersion();
+          String tmp = (String)org.nioto.browser.B.getLongName ( b.getShortName() );
+          if ( tmp ==null || tmp.length ()==0)
+          {
+              browser  ="unknown";
+          }
+          else
+            browser =  tmp+ " " + b.getMajVersion()+b.getMinVersion ();
+          // check os
+          os = b.getOsName ();
       }
+      else
+      {
+          browser = org.novadeck.jxla.tools.Bots.getBotName (bot);
+          os = "none (bot) ";
+      }
+      
+      Object value = _userAgents.get( key );
+      SimpleData data = (SimpleData)browsers.get( browser );
+      long total =((SimpleData)value).getCount(); 
+      if ( data != null )
+      {
+        data.add( total );
+      }
+      else
+      {
+        browsers.put( browser, new SimpleData(total) );
+      }
+      data = (SimpleData)oses.get( os );
+      if ( data != null )
+      {
+        data.add( ((SimpleData)value).getCount());
+      }
+      else
+      {
+        oses.put( os, new SimpleData(total) );
+      }      
     }
-    return hashToList( newMap);
+    HashMap result [] = { browsers, oses };
+    return result;
   }
-
-  public int compareTo(java.lang.Object obj) {
+  
+  public int compareTo(java.lang.Object obj) throws ClassCastException {
     MonthData month = (MonthData)obj;
     if ( _yearNumber == month.getYear()) {
       return (_monthNumber - month.getMonth());
@@ -349,23 +428,11 @@ public class MonthData extends GeneralLogData implements Comparable {
     return (_yearNumber - month.getYear());
   }
 
-
-  //-----------------------
-  public StringBuffer getDayData( int day , String siteName) {
-    DayData data = (DayData)this._days.get( day );
-    long traffic = data.getTraffic() ;
-    if ( traffic <= 0) {
-      System.out.println("traffic null for day " + day );
-      return null;
-    }
-    System.out.println("traffic not null for day " + day );
-    StringBuffer sb = new StringBuffer();
-    sb.append( "<site>\n<name>" +siteName + "</name>\n");
-    sb.append( "<hits>" + data.getHits()+"</hits>\n");
-    sb.append( "<bandwidth>" + traffic +"</bandwidth>\n</site>\n");
-    return sb;
+  //--------
+  public String toString(){
+      return "MonthData:"+_monthNumber+"/"+_yearNumber +" tr=="+ getTraffic();
   }
-
+  
   //--------
   private List computeHits() {
     HashMap map = new HashMap( _hits.size(), 1 );
@@ -376,5 +443,33 @@ public class MonthData extends GeneralLogData implements Comparable {
     }
     return hashToList( map );
   }
-
+  
+  /** 
+   * The following 2 methods are only needed to pass from JXLA 1.0 to JXLA 1.1
+   * In JXLA 1.0, all remote_ip are dns reversed ( when available ) in the serialized data.
+   * In JXLA 1.1, we store remote_ip as ip and only dns reverse the top Config.maxRemoteHosts ips
+   * to avoid unnecessary loss of time in dns queries. This save a lot of time.
+   **/
+  public void convertDnsNamesToIp( Map namesToIP){
+    convertDnsNamesToIp ( this._remote_ip, namesToIP );
+    for (Iterator ite = this._days.iterator (); ite.hasNext (); ){
+      DayData day = (DayData)ite.next ();
+      convertDnsNamesToIp( day._remote_ip, namesToIP );
+    }
+  }
+  private static void convertDnsNamesToIp(Map input, Map namesToIP){
+    Map newRemoteIp = new HashMap();
+    Set entries = input.entrySet ();
+    for ( Iterator ite = entries.iterator (); ite.hasNext () ; ){
+      Map.Entry entry = (Map.Entry)ite.next ();
+      Object obj = namesToIP.get ( entry.getKey () );
+      if ( obj == null) 
+        System.out.println("something wrong with :" + entry.getKey ());
+      else
+        newRemoteIp.put ( obj, entry.getValue ());
+    }
+    input.clear ();
+    input.putAll ( newRemoteIp );
+  }
+  
 }

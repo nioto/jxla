@@ -1,9 +1,9 @@
 /*
- * VerySimpleData.java
- *
- * Created on 6 février 2002, 00:00
+ * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/SerializableSimpleData.java,v $
+ * $Revision: 1.2 $
+ * $Date: 2005/01/06 13:18:54 $
+ * $Author: nioto $
  */
-
 package org.novadeck.jxla.data;
 
 /**

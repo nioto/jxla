@@ -2,8 +2,8 @@
  /** Info cvs
  *
  * $Source: /tmp/cvs/jxla/jxla/build.xml,v $
- * $Date: 2002/01/21 21:39:09 $
- * $Revision: 1.1 $
+ * $Date: 2005/01/06 13:18:53 $
+ * $Revision: 1.2 $
  * $Author: nioto $
  */
 -->
@@ -15,7 +15,7 @@
   <property name="build" value="build" />
   <property name="libs"  value="lib" />
   <property name="docs"  value="doc/api" />
-  <property name="classpath" value="lib/jakarta-oro.jar:lib/xerces.jar" />
+  <property name="classpath" value="lib/jakarta-oro.jar:lib/xerces.jar:lib/org.nioto.browser.jar:lib/InetAddressLocator.jar" />
 </target>
 
 <target name="prepare" depends="init">

@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!DOCTYPE jxla SYSTEM "jxla.dtd">
-
 <jxla>
 
   <dns>
     <available>false</available>
-    <filecache>E:/java/projects/jxla/logs/dns.dump</filecache>
+    <filecache>D:/tmp/logs/dns.dump</filecache>
   </dns>
 
   <logfiles>
-    <directory>E:/java/projects/jxla/logs/</directory>
-    <filenameregexp>http\.log</filenameregexp>
+    <directory>D:/tmp/logs/</directory>
+    <filenameregexp>(.*)\.log</filenameregexp>
     <format>
+      <regexp>$remote_host - $user [d/m/y*h *] "* $uri *" $status $size $referer $agent*</regexp>
+      <regexp>$remote_ip - $user [d/m/y*h *] "* $uri *" $status $size $referer $agent*</regexp>
       <regexp>m d h * * y $host $status $remote_ip "* $uri *" * $agent $lang $referer *</regexp>
       <regexp>m d h * * y $host $status $remote_ip "* $uri *" * $lang $referer "*" * *</regexp>
       <regexp>m d h * * y $host $status $remote_ip "* $uri *" $agent $lang $referer "$user" "*" $size *</regexp>
+      <regexp>y-m-d h $remote_ip * $host * * $uri * $status $agent</regexp>
     </format>
   </logfiles>
 
   <pages>
-    <extensions>.xml, .htm, .html, .php, .php, .php4, .pl, .cgi</extensions>
+    <extensions>.xml, .htm, .html, .php, .php, .php4, .pl, .cgi, .dll</extensions>
   </pages>
 
   <max-values>
     <referers>20</referers>
-      <keywords>50</keywords>
-      <user-agent>10</user-agent>
-      <remote-hosts>25</remote-hosts>
-      <uri>30</uri>
-      <notfound>10</notfound>
+    <keywords>50</keywords>
+    <remote-hosts>25</remote-hosts>
+    <uri>30</uri>
+    <notfound>10</notfound>
+    <countries>1000</countries>
+    <browsers>50</browsers>
+    <operating-system>50</operating-system>
   </max-values>
 
   <localconfigclass>org.novadeck.jxla.config.SimpleSiteConfig</localconfigclass>
@@ -37,7 +40,7 @@
   <summary-name>summary.xml</summary-name>
 
 
-  <history-filename>E:/tmp/sites.hist</history-filename>
+  <history-filepath>D:/tmp/logs/sites.hist</history-filepath>
 
   <searchengines>
     <engine>

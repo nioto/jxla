@@ -1,60 +1,7 @@
 /*
- * JXLA is released under an Apache-style license.
- * ==============================================
- *
- * The JXLA License, Version 1.0
- *
- * Copyright (c) 2002 JXLA. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
- *       "This product includes software developed by
- *        The JXLA Project Team (http://jxla.novadeck.org/)
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
- *
- * 4. The name "JXLA" must not be used to endorse or promote
- *    products derived from this software without
- *    prior written permission. For written permission,
- *    please contact nioto@users.sourceforge.net.
- *
- * 5. Products derived from this software may not be called "JXLA",
- *    nor may "JXLA" appear in their name, without prior written
- *    permission of the JXLA Team.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE TM4J PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- */
-
-
-/*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/data/DayData.java,v $
- * $Revision: 1.1 $
- * $Date: 2002/01/21 21:39:10 $
+ * $Revision: 1.2 $
+ * $Date: 2005/01/06 13:18:54 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.data;
@@ -65,12 +12,20 @@ import org.novadeck.jxla.tools.*;
 import java.util.*;
 
 
-public class DayData extends GeneralLogData {
+public class DayData implements java.io.Serializable {
 
   // day of the month
   private int       _day;
   // month
   private MonthData     _father;
+  
+  protected HashMap   _referers= new HashMap();
+  protected HashMap   _remote_ip= new HashMap();
+  protected HashMap   _hits= new HashMap();
+  long _traffic     = 0;
+  long _hitsCount   = 0;
+  long _pagesView   = 0;
+  long _files       = 0;
 
   //============================================================================
   public DayData( int day, MonthData month) {
@@ -86,35 +41,34 @@ public class DayData extends GeneralLogData {
   public void addLine( Line l ) {
     String tmp  = l.getReferer();
     if (tmp!=null) {
-      addReferer( tmp );
+        _referers.put( tmp, null );
       _father.addReferer( tmp );
     }
 
     tmp = l.getKeywords();
     if (tmp!=null) {
-      addKeywords( tmp );
       _father.addKeywords( tmp );
     }
 
     tmp = l.getVisitor();
     if (tmp!=null) {
-      addRemoteIP( tmp );
+        _remote_ip.put( tmp,null );
       _father.addRemoteIP( tmp );
     }
 
     tmp = l.getURI();
     if ( Utils.isPageView( tmp ) ){
-      addPageView( tmp );
+        _pagesView ++;
       _father.addPageView( tmp );
     }
 
-    addHit( tmp );
+    _hits.put( tmp,null );
+    _hitsCount++;
     _father.addHit( tmp );
 
-    incStatus( l.getStatus(), _status );
     long status = l.getStatus().longValue();
     if ( status == 200 ){
-      addFile( tmp );
+        _files++;
       _father.addFile( tmp );
     }
     else if (status == 404) {
@@ -124,15 +78,13 @@ public class DayData extends GeneralLogData {
 
     tmp = l.getUserAgent();
     if (!Utils.isEmpty(tmp)){
-      addUserAgent( tmp );
       _father.addUserAgent( tmp );
     }
     tmp = l.getUser();
     if (!Utils.isEmpty(tmp)){
-      addUser( tmp );
       _father.addUser( tmp );
     }
-    addTraffic( l.getSize() );
+    _traffic += l.getSize();
     _father.addTraffic( l.getSize() );
   }
 
@@ -145,15 +97,15 @@ public class DayData extends GeneralLogData {
     }
     ((SimpleData)obj).inc();
   }
-
   public void dumpData(Output out ) throws java.io.IOException {
-    out.writeln( "<hits>"       + getCount( _hits       ) + "</hits>"   );
-    out.writeln( "<files>"      + getCount( _files      ) + "</files>"  );
-    out.writeln( "<pages>"      + getCount( _pagesView  ) + "</pages>"  );
+    out.writeln( "<hits>"       + _hitsCount              + "</hits>"   );
+    out.writeln( "<files>"      + _files                  + "</files>"  );
+    out.writeln( "<pages>"      + _pagesView              + "</pages>"  );
     out.writeln( "<referers>"   + _referers.size()        + "</referers>"  );
     out.writeln( "<urls>"       + _hits.size()            + "</urls>"  );
     out.writeln( "<remote_ips>" + _remote_ip.size()       + "</remote_ips>"  );
     out.writeln( "<traffic>"    + _traffic                + "</traffic>"  );
+  
   }
 
   public static  void dumpEmptyData( Output out ) throws java.io.IOException {
@@ -165,19 +117,26 @@ public class DayData extends GeneralLogData {
     out.writeln( "<remote_ips>0</remote_ips>"  );
     out.writeln( "<traffic>0</traffic>"  );
   }
+  protected long getCount( HashMap map ) {
+    Set set = map.keySet();
+    long total = 0;
+    for (Iterator ite = set.iterator(); ite.hasNext(); ) {
+      Object obj = map.get( ite.next() );
+      total += ((SimpleData)obj).getCount();
+    }
+    return total;
+  }
 
   public long getHits(){
-    return getCount( _hits );
+    return _hitsCount;
   }
 
   public long getFiles(){
-    return getCount( _files );
+    return _files;
   }
 
   public long getPages(){
-    return getCount( _pagesView );
+    return _pagesView ;
   }
-
-
-
+  
 }
