@@ -7,7 +7,7 @@ echo "Notice: JAVA_HOME must be set"
 goto end
 
 :ok
-set CLASSPATH=lib/ant.jar;lib/xerces.jar;%JAVA_HOME%\lib\tools.jar
+set CLASSPATH=lib/ant.jar;lib/xerces.jar;lib/jakarta-ant-1.4.1-optional.jar;%JAVA_HOME%\lib\tools.jar
 
 %JAVA_HOME%\bin\java org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
 

@@ -1,5 +1,14 @@
 JXLA version 1.1
 =============
+- Correct bug in SimpleSiteConfig, while setting up the sourceforge CVS, a bad version
+has been uploaded which is not working. This version get the hiostname ( mandatory data)
+from the system property
+- Add ant task to generate release
+- Add a how-to in website to set up jxla
+- Add niotoBrowser v0.2.1 which supportes firefox
+
+JXLA version 1.1
+=============
 - Add geolocalisation using https://sourceforge.net/projects/javainetlocator/
 - Add improved browser parser using http://nioto.org/nioTo.Browser.php
 - Improve speed by only requesting DNS on the hosts which will be write 
