@@ -1,7 +1,7 @@
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/tools/SearchEngine.java,v $
- * $Revision: 1.3 $
- * $Date: 2005/01/06 13:18:54 $
+ * $Revision: 1.4 $
+ * $Date: 2005/03/19 16:11:58 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.tools;
@@ -64,9 +64,7 @@ public class SearchEngine  extends SimpleData {
   }
   //----------------
   /**
-   *   return the keyword(s) urlencode, warning, think to decode keyword by
-   *  java.net.URLDecoder.decode( xxx );
-   *
+   *   return the keyword(s) urldecoded bye java.net.URLDecoder.decode
    */
   public String getKeyword( String fullUri ) {
     int i = fullUri.indexOf('?');
@@ -91,8 +89,22 @@ public class SearchEngine  extends SimpleData {
     }
     if (keyword != null)
     {
-      keyword = java.net.URLDecoder.decode(keyword);
-    
+      // some requests are not well formed, ending with %X in 
+      // place of %XX,
+      // caused by: bad browsers, limitation in referer length, script kiddies ???
+      try{
+        keyword = java.net.URLDecoder.decode(keyword);
+      } catch (Exception e ){
+        System.err.println(e.getMessage ()  +" on " + keyword );
+        // if keyword ends with %X or % only, just remove this part
+        int len = keyword.length ();
+        int index = keyword.lastIndexOf ('%');
+        if ( index > len-2) {
+          try {
+            keyword = java.net.URLDecoder.decode( keyword.substring ( 0, index) );
+          } catch (Exception e1){ }
+        }
+      }
         //remove cache: from google
         int index = keyword.indexOf ( "cache:" );
         if ( index >=0)
