@@ -1,7 +1,7 @@
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/xml/Constants.java,v $
- * $Revision: 1.3 $
- * $Date: 2005/01/06 13:18:54 $
+ * $Revision: 1.4 $
+ * $Date: 2005/04/05 22:03:00 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.xml;
@@ -48,4 +48,6 @@ public class Constants {
 
 
   public static final String  HISTORY_FILEPATH    = "history-filepath";
+  
+  public static final String  DEFAUL_INDEX        = "defaultindex";
 }

@@ -1,7 +1,7 @@
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/config/Config.java,v $
- * $Revision: 1.3 $
- * $Date: 2005/01/06 13:18:54 $
+ * $Revision: 1.4 $
+ * $Date: 2005/04/05 22:03:00 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.config;
@@ -147,7 +147,10 @@ public class Config {
   public static void addSearchEngine( String name, String domain, String param )  {
     SearchEngine.addSearchEngine( name, domain, param);
   }
-
+  public static void setDefaultIndex( String s){
+    indexFileName = s;
+  }
+  
   public static void displayConfig() {
     System.out.println("Your configuration is :");
     System.out.println("");
@@ -183,7 +186,7 @@ public class Config {
     System.out.println(" ]");
     
     
-    System.out.println("");
+    System.out.println();
     System.out.println("Max referers to output : " + maxRefers );
     System.out.println("Max search engine keywords to output : " + maxKeywords );
     System.out.println("Max remote hosts to output : " + maxRemoteHosts );

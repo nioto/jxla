@@ -22,6 +22,7 @@
 
   <pages>
     <extensions>.xml, .htm, .html, .php, .php, .php4, .pl, .cgi, .dll</extensions>
+    <indexalias>index.html</indexalias>
   </pages>
 
   <max-values>

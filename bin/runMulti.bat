@@ -5,33 +5,29 @@ rem  * * * * * *
 rem  need  to set output dir and hostname
 rem  ------------------------------------
 set OUTPUTDIR=
+set JAVA_HOME=
 set CONF=
 
-
-if "%OUTPUTDIR%"==""	goto noOutput
-:check_host
-if "%CONF%"==""	goto noConf
-
-goto check_java_home
-
-
-:noOutput
-echo " No output dir specified, edit run.bat to set OUTPUTDIR !!"
-goto check_host
-
-:noConf
-echo " No configuration file specified, edit run.bat to set CONF !!"
+rem #
+rem # don"t change following lines
+rem #
+set ERROR= 
+if "%OUTPUTDIR%" == "" (
+ set ERROR=1
+ echo no output dir, set OUTPUTDIR
+)
+if "%CONF%" == "" (
+  set ERROR=1
+ echo no configuration file, set CONF
+)
+if "%JAVA_HOME%"=="" (
+  set ERROR=1
+  echo no java home found, set JAVA_HOME
+)
+  
+if "%ERROR%"=="" goto ok
+echo CORRECT ERRORS AND TRY AGAIN ;-)
 goto end
-
-
-:check_java_home
-if NOT "%JAVA_HOME%"=="" goto ok
-echo "Notice: JAVA_HOME must be set" 
-goto end
-
-
-
-
 
 
 :ok
@@ -44,6 +40,4 @@ set CLASSPATH=%CLASSPATH%;lib/InetAddressLocator.jar
 
 %JAVA_HOME%\bin\java -Doutputdir=%OUTPUTDIR% org.novadeck.jxla.Main %CONF% 
 
-
 :end
-pause

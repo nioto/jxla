@@ -1,7 +1,7 @@
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/config/SimpleSiteConfig.java,v $
- * $Revision: 1.4 $
- * $Date: 2005/03/19 17:27:07 $
+ * $Revision: 1.5 $
+ * $Date: 2005/04/05 22:03:00 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.config;
@@ -28,8 +28,7 @@ public class SimpleSiteConfig implements AbstractSiteConfig {
   }
 
   public String getRealHostName(String hostname) {
-    if ( hostname != null) hostname=hostname.toLowerCase();
-    return hostname;
+    return System.getProperty("hostname");
   }
 
   public String getRealUserInfo(String user) {
@@ -39,7 +38,7 @@ public class SimpleSiteConfig implements AbstractSiteConfig {
 
   public boolean ignoreLine( RegexpData re ) {
     String ip = re.getRemoteIP();
-    if ( ip.startsWith( "127." )) 
+    if ( ip.startsWith( "127." ))
       return true;
     else
       return false;
@@ -60,5 +59,5 @@ public class SimpleSiteConfig implements AbstractSiteConfig {
       return s;
     }
   }
-  
+
 }

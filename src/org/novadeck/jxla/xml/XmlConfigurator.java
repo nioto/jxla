@@ -1,7 +1,7 @@
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/xml/XmlConfigurator.java,v $
- * $Revision: 1.3 $
- * $Date: 2005/01/06 13:18:54 $
+ * $Revision: 1.4 $
+ * $Date: 2005/04/05 22:03:00 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.xml;
@@ -44,7 +44,7 @@ public class XmlConfigurator {
           configureLogFiles(n);
         } else
           if ( Constants.PAGESEXTENSIONS_NODE.equals(name)){
-            configureExtensionPages(n);
+            configurePages(n);
           } else
             if ( Constants.MAXVALUES_NODE.equals(name)){
               configureMaxValues(n);
@@ -115,13 +115,16 @@ public class XmlConfigurator {
     Config.setLogFiles( directory, regexp);
   }
 
-  private static void configureExtensionPages( Node node ) {
+  private static void configurePages( Node node ) {
     NodeList nlist = node.getChildNodes();
     int len = nlist.getLength();
     for (int i=0;i<len;i++) {
       Node n = nlist.item( i );
       String name = n.getNodeName();
-      if ( Constants.PAGESEXTENSIONS_EXT.equals( name )) {
+      if ( Constants.DEFAUL_INDEX.equals( name )) {
+        String index = n.getFirstChild().getNodeValue();
+        Config.setDefaultIndex ( index );
+      } else if ( Constants.PAGESEXTENSIONS_EXT.equals( name )) {
         String ext = n.getFirstChild().getNodeValue();
         StringTokenizer st = new StringTokenizer( ext, ",");
         while (st.hasMoreTokens() ){
