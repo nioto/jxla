@@ -4,65 +4,68 @@
 
 <jxla>
 
-	<dns>
-		<available>false</available>
-		<filecache>E:/java/projects/jxla/logs/dns.dump</filecache>
-	</dns>
+  <dns>
+    <available>false</available>
+    <filecache>E:/java/projects/jxla/logs/dns.dump</filecache>
+  </dns>
 
-	<logfiles>
-		<directory>E:/java/projects/jxla/logs/</directory>
-		<filenameregexp>http\.log</filenameregexp>
-		<format>
-			<regexp>m d h * * y $host $status $remote_ip "* $uri *" * $agent $lang $referer *</regexp>
-			<regexp>m d h * * y $host $status $remote_ip "* $uri *" * $lang $referer "*" * *</regexp>
-			<regexp>m d h * * y $host $status $remote_ip "* $uri *" $agent $lang $referer "$user" "*" $size *</regexp>
-		</format>
-	</logfiles>
+  <logfiles>
+    <directory>E:/java/projects/jxla/logs/</directory>
+    <filenameregexp>http\.log</filenameregexp>
+    <format>
+      <regexp>m d h * * y $host $status $remote_ip "* $uri *" * $agent $lang $referer *</regexp>
+      <regexp>m d h * * y $host $status $remote_ip "* $uri *" * $lang $referer "*" * *</regexp>
+      <regexp>m d h * * y $host $status $remote_ip "* $uri *" $agent $lang $referer "$user" "*" $size *</regexp>
+    </format>
+  </logfiles>
 
-	<pages>
-		<extensions>.xml, .htm, .html, .php, .php, .php4, .pl, .cgi</extensions>
-	</pages>
+  <pages>
+    <extensions>.xml, .htm, .html, .php, .php, .php4, .pl, .cgi</extensions>
+  </pages>
 
-	<max-values>
-		<referers>20</referers>
-  		<keywords>50</keywords>
-  		<user-agent>10</user-agent>
-  		<remote-hosts>25</remote-hosts>
-  		<uri>30</uri>
-  		<notfound>10</notfound>
-	</max-values>
+  <max-values>
+    <referers>20</referers>
+      <keywords>50</keywords>
+      <user-agent>10</user-agent>
+      <remote-hosts>25</remote-hosts>
+      <uri>30</uri>
+      <notfound>10</notfound>
+  </max-values>
 
-	<localconfigclass>org.novadeck.jxla.config.SimpleSiteConfig</localconfigclass>
+  <localconfigclass>org.novadeck.jxla.config.SimpleSiteConfig</localconfigclass>
 
-	<summary-name>summary.xml</summary-name>
+  <summary-name>summary.xml</summary-name>
 
-	<searchengines>
-		<engine>
-			<name>Yahoo!</name>
-			<requestparameter>p</requestparameter>
-			<domain>yahoo.fr</domain>
-		</engine>
-		<engine>
-			<name>Yahoo!</name>
-			<requestparameter>p</requestparameter>
-			<domain>yahoo.com</domain>
-		</engine>
-		<engine>
-			<name>gOOgle</name>
-			<requestparameter>q</requestparameter>
-			<domain>google.fr</domain>
-		</engine>
-		<engine>
-			<name>gOOgle</name>
-			<requestparameter>q</requestparameter>
-			<domain>google.com</domain>
-		</engine>
-		<engine>
-			<name>NetScape</name>
-			<requestparameter>search</requestparameter>
-			<domain>netscape.com</domain>
-		</engine>
-	</searchengines>
+
+  <history-filename>E:/tmp/sites.hist</history-filename>
+
+  <searchengines>
+    <engine>
+      <name>Yahoo!</name>
+      <requestparameter>p</requestparameter>
+      <domain>yahoo.fr</domain>
+    </engine>
+    <engine>
+      <name>Yahoo!</name>
+      <requestparameter>p</requestparameter>
+      <domain>yahoo.com</domain>
+    </engine>
+    <engine>
+      <name>gOOgle</name>
+      <requestparameter>q</requestparameter>
+      <domain>google.fr</domain>
+    </engine>
+    <engine>
+      <name>gOOgle</name>
+      <requestparameter>q</requestparameter>
+      <domain>google.com</domain>
+    </engine>
+    <engine>
+      <name>NetScape</name>
+      <requestparameter>search</requestparameter>
+      <domain>netscape.com</domain>
+    </engine>
+  </searchengines>
 
 </jxla>
 
