@@ -4,8 +4,8 @@
 # need  to set output dir and hostname
 # ------------------------------------
 OUTPUTDIR=
-HOSTNAME=
 JAVA_HOME=
+CONF=
 
 ERROR=0
 
@@ -14,8 +14,8 @@ if [ "$OUTPUTDIR" = "" ] ; then
   ERROR=1
 fi
 
-if [ "$HOSTNAME" = "" ] ; then 
-  echo  "Error: No hostname specified, edit run.sh to set HOSTNAME !!"
+if [ "$CONF" = "" ] ; then 
+  echo "Error: No configuration file specified, edit run.sh to set CONF !!"
   ERROR=1
 fi
 
@@ -26,6 +26,7 @@ fi
 
 
 if [ "$ERROR" != "0" ] ; then 
+  echo "CORRECT ERRORS AND TRY AGAIN !"
   exit 1;
 fi
 
@@ -39,9 +40,8 @@ CLASSPATH=$CLASSPATH:lib/org.nioto.browser.jar
 CLASSPATH=$CLASSPATH:lib/InetAddressLocator.jar
 
 
-CONF=conf/conf.xml
 if [ "$1" != "" ] ; then
   CONF=$1
 fi
 
-$JAVA_HOME/bin/java -Dhostname=$HOSTNAME -Doutputdir=$OUTPUTDIR  org.novadeck.jxla.Main $CONF 
+$JAVA_HOME/bin/java -Doutputdir=$OUTPUTDIR org.novadeck.jxla.Main $CONF 

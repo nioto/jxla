@@ -4,14 +4,13 @@ rem !/bin/sh
 rem  * * * * * *
 rem  need  to set output dir and hostname
 rem  ------------------------------------
-set OUTPUTDIR=D:/tmp/logs/
-rem #/tmp/report
-set HOST=nioto.com
+set OUTPUTDIR=
+set CONF=
 
 
 if "%OUTPUTDIR%"==""	goto noOutput
 :check_host
-if "%HOST%"==""	goto noHostname
+if "%CONF%"==""	goto noConf
 
 goto check_java_home
 
@@ -20,8 +19,8 @@ goto check_java_home
 echo " No output dir specified, edit run.bat to set OUTPUTDIR !!"
 goto check_host
 
-:noHostname
-echo " No hostname specified, edit run.bat to set HOST !!"
+:noConf
+echo " No configuration file specified, edit run.bat to set CONF !!"
 goto end
 
 
@@ -43,10 +42,7 @@ set CLASSPATH=%CLASSPATH%;lib/org.nioto.browser.jar
 set CLASSPATH=%CLASSPATH%;lib/InetAddressLocator.jar
 
 
-set CONF=conf/conf.xml
-if NOT "%1"==""	set CONF=%1
-
-%JAVA_HOME%\bin\java -Dhostname=%HOST% -Doutputdir=%OUTPUTDIR% -DDEBUG=true org.novadeck.jxla.Main %CONF% 
+%JAVA_HOME%\bin\java -Doutputdir=%OUTPUTDIR% org.novadeck.jxla.Main %CONF% 
 
 
 :end

@@ -19,7 +19,7 @@ public class ConvertDnsNamesToIp {
   {
     if ( args == null || args.length!=2 )
     {
-      System.out.println ("Warning! usage java org.novadeck.jxla.addon.HistorySiteManagement file.hist dns.cache" );
+      System.out.println ("Warning! usage java org.novadeck.jxla.addon.ConvertDnsNamesToIp file.hist dns.cache" );
       System.exit (1);
     }
     File history  = new File ( args[0] );

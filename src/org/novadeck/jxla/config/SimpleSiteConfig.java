@@ -1,7 +1,7 @@
 /*
  * $Source: /tmp/cvs/jxla/jxla/src/org/novadeck/jxla/config/SimpleSiteConfig.java,v $
- * $Revision: 1.3 $
- * $Date: 2005/01/06 13:18:54 $
+ * $Revision: 1.4 $
+ * $Date: 2005/03/19 17:27:07 $
  * $Author: nioto $
  */
 package org.novadeck.jxla.config;
@@ -20,14 +20,11 @@ import java.util.HashMap;
 public class SimpleSiteConfig implements AbstractSiteConfig {
 
 
-  private static final String RELATIVE_DIRECTORY_4_STATS = "/stat/";
-
   public SimpleSiteConfig() {
   }
 
-
   public String getStatsDirectory(String hostname) {
-    return "E:/tmp/" + hostname +"/";
+    return System.getProperty("outputdir");
   }
 
   public String getRealHostName(String hostname) {

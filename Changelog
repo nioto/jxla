@@ -1,0 +1,13 @@
+JXLA version 1.1
+=============
+- Add geolocalisation using https://sourceforge.net/projects/javainetlocator/
+- Add improved browser parser using http://nioto.org/nioTo.Browser.php
+- Improve speed by only requesting DNS on the hosts which will be write 
+( need an upgrade, to upgrade from v1.0 you will need to use org.novadeck.jxla.addon.ConvertDnsNamesToIp,
+a new file 'newsite.hist' will be created, you need to move it to your 'site.hist' or whatever you wrote
+in <history-filepath> node in configuration file  )
+
+
+JXLA version 1.0
+=============
+first release
