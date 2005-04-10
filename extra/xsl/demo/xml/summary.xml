@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><site>
+<name>jxla.nvdcms.org</name>
+<month>
+<name>January</name>
+<number>1</number>
+<year>2005</year><url>usage_200501.xml</url>
+<hits>4537</hits>
+<files>3976</files>
+<pages>2880</pages>
+<traffic>33855003</traffic>
+</month>
+<month>
+<name>February</name>
+<number>2</number>
+<year>2005</year><url>usage_200502.xml</url>
+<hits>3402</hits>
+<files>2891</files>
+<pages>1840</pages>
+<traffic>22115128</traffic>
+</month>
+</site>

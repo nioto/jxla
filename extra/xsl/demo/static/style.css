@@ -1,0 +1,150 @@
+body {  background-color: white }
+		
+		
+a { color: black ; font-family: "arial",serif ; font-weight: normal ; 
+		font-size: 11px ; font-style: normal ; text-decoration: underline }
+a:hover { color: #537fb0 }
+
+a.little { color: black ; font-family: "arial",serif ; font-weight: normal ; 
+		font-size: 10px ; font-style: normal ; text-decoration: underline }
+a.little:hover { color: #537fb0 }
+
+a.big-lien { color: #d04525 ; font-family: "arial",serif ; font-weight: bold ; 
+						font-size: 12px ; font-style: normal ; text-decoration: none }
+a.big-lien:hover { color: white }
+
+a.detail-lien { color: black ; font-family: "arial",serif ; font-weight: bold ; 
+						font-size: 13px ; font-style: normal ; text-decoration: none }
+a.detail-lien:hover { color: white }
+
+a.link { color: #537fb0 ; font-family: "arial",serif ; font-weight: bold ; 
+					font-size: 12px ; font-style: normal ; text-decoration: none }
+a.link:hover { color: #a2c3e7 }
+
+a.logo { color: white ; font-size: 20px ; text-align: left ; font-weight: bold ; 
+					text-align: center ; font-style: italic ; text-decoration: none }
+a.logo:hover { color: white }
+
+a.plus {  color: black ; background-color: #e2e2e2 ; font-weight: bold ; text-decoration: none}
+a.plus:hover { background-color: #cee1f5 }
+
+
+img.border { border-color: black ; border-width: 1px }
+
+
+td { font-style: normal ; font-family: "arial",sans-serif ; font-weight: normal ; font-size: 11px  }
+	
+td.txt { font-size: 12px ; text-align: justify }
+	
+td.txtprice { font-size: 12px ; text-align: center }
+				
+td.title { color: white ; font-size: 14px ; text-align: left ; 	font-weight: bold ; text-align: center }
+
+td.stattitle { color: white ; font-size: 12px ; text-align: right ; 	font-weight: bold ; background-color: #537fb0 }
+
+td.title-stat { color: white ; font-size: 14px ; font-weight: bold ; text-align: right }
+
+td.title-left { color: #537fb0 ; font-size: 16px ; text-align: center ; font-weight: bold ; font-style: normal }
+
+td.title-news { color: black ; font-size: 12px ; text-align: left ; font-weight: bold ; font-style: italic }
+
+td.big-title-news { color: black ; font-size: 16px ; font-weight: bold ; font-style: italic ; text-align: left }
+
+td.pt-txt { font-style: normal ; font-family: "arial",sans-serif ; font-weight: normal ; font-size: 11px ; line-height: 12px }
+
+td.legende-red { color: #d04525 ; font-size: 10px ; font-style: normal }
+
+td.legende-blue { color: #537fb0 ; font-size: 10px ; font-style: normal }
+
+
+
+
+td.rayure1{  background-image: url(../img/1/rayure.gif) ; background-repeat: repeat ; background-color: #cee1f5 }
+td.rayure2 {  background-image: url(../img/1/rayure.gif) ; background-repeat: repeat ; background-color: #c6b5b5 }
+td.rayure3 {  background-image: url(../img/1/rayure.gif) ; background-repeat: repeat ; background-color: #cee1f5 }
+
+
+
+b { font-weight: bold  }
+
+b.grey { color: #777777 }						
+
+b.blue { color: #537fb0 }						
+
+
+li.dossier { list-style-image: url(../img/1/dossier.gif) }
+li.warning {color: #d04525 ; font-size: 11px ; font-style: normal ; font-weight: bold }
+
+td.titlemail { color: white ; font-size: 20px ; text-align: left ; 	font-weight: bold  }
+
+select.texte { color: #d04525 ; font-size: 10px ; font-style: normal  ; font-weight: normal }
+textarea.texte { color: black ; font-size: 11px ; font-style: normal  ; font-weight: normal }
+
+input.texte { color: black ; font-size: 12px ; font-style: normal ; background-color: #a2c3e7 ; font-weight: bold }
+
+a.editmail { color: black ; font-family: "arial",serif ; font-weight: bold ; 
+		font-size: 12px ; font-style: normal ; text-decoration: underline }
+a.editmail:hover { color: #537fb0 }
+
+
+
+font.logo { color: white ; font-size: 20px ; text-align: left ; font-weight: bold ; 
+					text-align: center ; font-style: italic ; text-decoration: none }
+
+
+
+font { font-size: 12px ; font-style: normal }
+
+font.title { color: #537fb0 ; font-size: 16px ; font-weight: bold }
+
+font.bignum { color: #c6b5b5 ; font-size: 32px ; font-weight: bold }
+
+font.ptfont { color: #777777}
+
+font.price { color: #d04525 ; font-size: 16px ; font-weight: bold ; text-align: center ; font-style: italic }
+
+font.legende { color: #c29a9a ; font-size: 10px ; font-style: normal }
+
+font.statlegende { color: #d04525 ; font-size: 10px ; font-style: normal; font-weight: bold }
+
+font.statlegendeblue { color: #537fb0 ; font-size: 10px ; font-style: normal; font-weight: bold }
+
+font.fontgrise { color: #b9b9b9 ; font-size: 11px ; font-style: normal }
+
+font.statblue { color: #537fb0 ; font-size: 11px ; font-style: normal; font-weight: bold }
+
+
+
+hr { color: #56629e}
+
+
+
+.bgcolor-tabdeb-end {background-color: #c29a9a }
+.bgcolor-logo {background-color: #d04525 }
+.bg-title {background-color: #d04525 }
+
+.colonne-left {background-color: white }
+.colonne-right {background-color: white }
+
+.filet-left-left {background-color: white }
+.filet-left {background-color: white }
+.filet-right {background-color: white }
+.filet-right-right {background-color: white }
+
+
+.white {background-color: white}
+.grey90 {background-color: #e2e2e2}
+.grey75 {background-color: #b9b9b9}
+.grey50 {background-color: #777777}
+.grey25 {background-color: #3b3b3b}
+.black {background-color: black}
+
+.colorb3 {background-color: #c6b5b5 }
+.colorb2 {background-color: #c29a9a }
+.colorb {background-color: #d04525 }
+
+.colorw4 {background-color: #C8D7E7 }
+.colorw3 {background-color: #537fb0 }
+.colorw2 {background-color: #a2c3e7 }
+.colorw {background-color: #cee1f5 }
+
