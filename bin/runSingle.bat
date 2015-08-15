@@ -42,7 +42,6 @@ goto end
 set CLASSPATH=lib/xerces.jar
 set CLASSPATH=%CLASSPATH%;lib/jakarta-oro.jar
 set CLASSPATH=%CLASSPATH%;lib/jxla.jar
-set CLASSPATH=%CLASSPATH%;lib/org.nioto.browser.jar
 set CLASSPATH=%CLASSPATH%;lib/InetAddressLocator.jar
 
 

@@ -46,7 +46,6 @@ fi
 CLASSPATH=lib/xerces.jar
 CLASSPATH=$CLASSPATH:lib/jakarta-oro.jar
 CLASSPATH=$CLASSPATH:lib/jxla.jar
-CLASSPATH=$CLASSPATH:lib/org.nioto.browser.jar
 CLASSPATH=$CLASSPATH:lib/InetAddressLocator.jar
 
 export CLASSPATH

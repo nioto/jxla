@@ -15,7 +15,7 @@
   <property name="build" value="build" />
   <property name="libs"  value="lib" />
   <property name="docs"  value="doc/api" />
-  <property name="classpath" value="lib/jakarta-oro.jar:lib/xerces.jar:lib/org.nioto.browser.jar:lib/InetAddressLocator.jar" />
+  <property name="classpath" value="lib/jakarta-oro.jar:lib/xerces.jar:lib/InetAddressLocator.jar" />
 </target>
 
 <target name="prepare" depends="init">
