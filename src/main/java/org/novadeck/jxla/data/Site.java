@@ -8,13 +8,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.novadeck.jxla.Constants;
 
 public class Site {
     // all sites available
-    private static HashMap<String, Site> _sites = new HashMap<String, Site>();
+    private static Map<String, Site> _sites = new HashMap<String, Site>();
     
     // local variables
     //--------
@@ -63,7 +64,7 @@ public class Site {
             return ;
         }
         if ( (lastLogDate == null) || lastLogDate.before( currentLineDate ) ) {
-            lastLogDate = (Date)currentLineDate.clone();;
+            lastLogDate = (Date)currentLineDate.clone();
         }
         int mm = currentLineDate.getMonth() ;
         int yy = currentLineDate.getYear()  ;
@@ -79,7 +80,7 @@ public class Site {
     
     private MonthData getMonth( int month, int year ) {
         for (int i=_months.size()-1; i>=0  ; i--) {
-            MonthData tmp = (MonthData)_months.get( i );
+            MonthData tmp = _months.get( i );
             if ( ( month == tmp.getMonth()) && ( year == tmp.getYear() ) ) {
                 return tmp;
             }
@@ -133,13 +134,13 @@ public class Site {
         StringBuffer output = new StringBuffer( Constants.HEADER_XML );
         output.append( "<site>\n" );
         output.append( "<name>"+_name + "</name>\n") ;
-        MonthData m = (MonthData)_months.get( 0 );
+        MonthData m = _months.get( 0 );
         // summary data from history
         if ( _history != null ) {
             output.append( _history.getSummary() ) ;
         }
         for ( int i =0; i< _months.size(); i++) {
-            m = (MonthData)_months.get( i );
+            m = _months.get( i );
             output.append( m.getData( ) );
              //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*--*-*--*-*-*-*
             m.dumpDataToFile( statsDirectory, beginLogDate ) ;
@@ -152,7 +153,7 @@ public class Site {
     //============================================================================
     //--------
     public static Site getSite( String host ){
-        Site  s = (Site)_sites.get( host );
+        Site  s = _sites.get( host );
         if ( s ==null) {
             s = new Site( host );
             _sites.put( host, s);
@@ -164,7 +165,7 @@ public class Site {
      *  Remove a site from the site cache
      */
     public static Site removeSite( String host ){
-        return (Site)_sites.remove ( host );
+        return _sites.remove ( host );
     }
     //--------
     public static String[] getSiteHosts() {
@@ -179,7 +180,7 @@ public class Site {
     }
     //--------
     public static void addSite( SiteHistory hist ){
-        Site  s = (Site)_sites.get( hist.getName() );
+        Site  s = _sites.get( hist.getName() );
         if ( s ==null) {
             s = new Site( hist.getName() );
             _sites.put( hist.getName(), s);

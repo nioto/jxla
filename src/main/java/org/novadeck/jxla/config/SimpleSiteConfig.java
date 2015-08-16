@@ -2,12 +2,12 @@ package org.novadeck.jxla.config;
 
 
 import org.novadeck.jxla.data.RegexpData;
+import org.novadeck.jxla.tools.Utils;
 
 
-/*
+/**
  *
  */
-
 public class SimpleSiteConfig implements AbstractSiteConfig {
 
 
@@ -29,12 +29,8 @@ public class SimpleSiteConfig implements AbstractSiteConfig {
 
   public boolean ignoreLine( RegexpData re ) {
     String ip = re.getRemoteIP();
-    if ( ip.startsWith( "127." ))
-      return true;
-    else
-      return false;
+    return ( ip.startsWith( "127." ));
   }
-
 
 
   /** Retrieve the directory where to store a summary of requests to the differents
@@ -43,12 +39,7 @@ public class SimpleSiteConfig implements AbstractSiteConfig {
   public String getMainDirForGeneralStat (String site)
   {
     String s = System.getProperty("global");
-    if (org.novadeck.jxla.tools.Utils.isEmpty( s ) ) {
-      return null;
-    }
-    else {
-      return s;
-    }
+    return ( Utils.isEmpty( s ) ? null : s );
   }
 
 }

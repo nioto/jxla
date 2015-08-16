@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,11 +23,14 @@ import org.novadeck.jxla.data.Site;
 import org.novadeck.jxla.tools.History;
 import org.novadeck.jxla.tools.Output;
 import org.novadeck.jxla.xml.XmlConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Main
 {
     
+	final static Logger logger = LoggerFactory.getLogger( Main.class );
     
     public static void main (String args[])
     {
@@ -36,8 +40,8 @@ public class Main
         } 
         catch (Exception e)
         {
-            e.printStackTrace ();
-            System.exit (1);
+        	logger.error( "Unable to configure app ", e);
+        	System.exit (1);
         }
         if ( ( args.length > 1 ) && ( "viewConfig".equals ( args[1] ) ) )
         {
@@ -68,25 +72,23 @@ public class Main
                 File f = new File ( files[file] );
                 if ( ! f.exists () )
                 {
-                    System.err.println ("file does not exist " + files[file] );
+                    logger.error( "file does not exist {}", files[file] );
                     continue;
                 }
                 
-                BufferedReader in = null;
+                Reader reader = null;
                 if ( files[file].endsWith ( ".gz" ))
                 {
-                    GZIPInputStream gzin = new GZIPInputStream ( new FileInputStream ( f ) );
-                    InputStreamReader inStream = new InputStreamReader ( gzin );
-                    in = new BufferedReader ( inStream );
+                    reader = new InputStreamReader ( new GZIPInputStream ( new FileInputStream ( f ) ) );
                 }
                 else
                 {
-                    in = new BufferedReader ( new FileReader ( f ) );
+                    reader = new FileReader ( f );
                 }
+                BufferedReader in = new BufferedReader ( reader );
                 String currentLine;
                 
-                if (Config.DEBUG) 
-                  System.out.println ("Parsing file " + files[file] );
+                logger.debug( "Parsing file {}", files[file] );
                 while ( (currentLine = in.readLine ()) != null)
                 {
                     current++;
@@ -102,19 +104,11 @@ public class Main
                         if ( isOK ) Site.addLine ( l );
                     }
                 }
-                if (Config.DEBUG) 
-                {
-                  System.out.println ("badlines = " + (badlines-tmpbadLines));
-                  System.out.println ("current =" + current);
-                }
+                logger.debug( "badlines = {}", (badlines-tmpbadLines));
+                logger.debug( "current = {}", current);
                 tmpbadLines = badlines;
                 in.close ();
-                if (Config.DEBUG) 
-                {
-                  System.out.println ("GeneralLogData " + GeneralLogData.total);
-                  System.gc ();
-                  System.out.println (Runtime.getRuntime ().freeMemory () + "/" + Runtime.getRuntime ().totalMemory () );
-                }
+              	logger.debug( "GeneralLogData : {}", GeneralLogData.total);
             }
             errors.close ();
         }
@@ -122,10 +116,9 @@ public class Main
         {
             if ( t instanceof java.lang.OutOfMemoryError)
             {
-                System.out.println (Runtime.getRuntime ().freeMemory () + "/" + Runtime.getRuntime ().totalMemory () );
+                logger.debug( "OutOfMemryError  {} / {}", Runtime.getRuntime ().freeMemory (), Runtime.getRuntime ().totalMemory () );
             }
-            System.err.println ("GeneralLogData " + GeneralLogData.total);
-            t.printStackTrace ();
+            logger.error( "GeneralLogData {}", GeneralLogData.total, t);
             System.exit (1);
         }
         
@@ -133,33 +126,27 @@ public class Main
         double time= ( (System.currentTimeMillis () - beginTime ) /100) /10;
         System.out.println ( time + " seconds to parse " + current + " lines ");
         
-        if (Config.DEBUG) 
-          System.out.println ("dumping data");
+        logger.debug( "dumping data");
         beginTime = System.currentTimeMillis ();
         
         String[]  list = Site.getSiteHosts ();
-        if (Config.DEBUG) 
-          System.out.println (" nb of sites = "  +list.length);
+        logger.debug( " nb of sites = {}", list.length);
         for ( int k=0; k < list.length; k++ )
         {
             StringBuffer sb = new StringBuffer ();
             Site s = Site.getSite ( list[k] );
-            if (Config.DEBUG) 
-              System.out.println ("dumping for site = " + s.getName ());
+            logger.debug( "dumping for site = {}", s.getName ());
             try
             {
                 String statsDirectory = Config.siteConfig.getStatsDirectory ( list[k] );
                 File f = new File ( statsDirectory );
-                if ( ! f.exists () )
-                {
-                    if ( !f.mkdirs () )
-                    {
-                        System.err.println (" ERROR CAN MAKE DIRECTORY " + statsDirectory );
-                        continue;
+                if ( ! f.exists () ) {
+                    if ( !f.mkdirs () ) {
+                    	logger.error( " ERROR CAN MAKE DIRECTORY {}", statsDirectory );
+                      continue;
                     }
                 }
-                if (Config.DEBUG) 
-                  System.out.println ("writing " +statsDirectory + "/"  + Config.summaryPageName);
+                logger.debug( "writing {} / {}", statsDirectory, Config.summaryPageName);
                 Output out  = new Output (  statsDirectory + "/"  + Config.summaryPageName) ;
                 sb = s.getData ( statsDirectory );
                 out.write ( sb.toString () );
@@ -193,8 +180,7 @@ public class Main
             
             Site site = Site.getSite ( list[k] );
             String path = Config.siteConfig.getMainDirForGeneralStat ( site.getName () );
-            if (Config.DEBUG) 
-              System.out.println ("path == " + path);
+            logger.debug( "path = {}", path);
             if ( path == null )   continue;
             
             try
@@ -216,11 +202,10 @@ public class Main
                                 if ( ! f.exists () )
                                 {
                                     if (!f.mkdirs ())
-                                        System.err.println ("ERROR creating " + f.getPath () );
+                                    	logger.error( "ERROR creating {}", f.getPath () );
                                 }
                                 _month = new Output ( summaryPage );
-                                if (Config.DEBUG) 
-                                  System.out.println ("GLOBAL = " + summaryPage);
+                                logger.debug( "GLOBAL = {}", summaryPage);
                                 _month.writeln ( Constants.HEADER_XML );
                                 _month.writeln ( "<monthsummary>" );
                                 _month.writeln ( "<name>"  + Constants.getMonth(_begin.getMonth ()) + "</name>");
@@ -298,14 +283,11 @@ public class Main
      */
         /* */
         time= ( (System.currentTimeMillis () - beginTime ) /100) /10;
-        if (Config.DEBUG) 
-        {
-          System.out.println ("found "+ badlines + " bad lines ");
-          System.out.println ( time + " seconds to dimp data ");
-        }
+        logger.debug( "found {} bad lines ", badlines);
+        logger.debug( " {} seconds to dimp data ", time);
         History.saveHistory ();
         Config.dumpDnsCache ();
-        RegexpData.dumpCounters ();
+        RegexpData.dumpCounters (System.out);
         System.exit (0);
     }
     

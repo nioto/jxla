@@ -9,15 +9,15 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
-      <groupId>jakarta-regexp</groupId>
-      <artifactId>jakarta-regexp</artifactId>
-      <version>1.4</version>
-    </dependency>
-    <dependency>
       <groupId>javainetlocator</groupId>
       <artifactId>inetaddresslocator</artifactId>
       <version>2.18</version>
     </dependency>
+	<dependency> 
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-jdk14</artifactId>
+	  <version>1.7.12</version>
+	</dependency>
 
     <dependency>
       <groupId>junit</groupId>

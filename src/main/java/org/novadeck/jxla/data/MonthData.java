@@ -1,6 +1,7 @@
 package org.novadeck.jxla.data;
 
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -18,16 +19,20 @@ import org.novadeck.jxla.Constants;
 import org.novadeck.jxla.config.Config;
 import org.novadeck.jxla.tools.Output;
 import org.novadeck.jxla.tools.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class MonthData extends GeneralLogData implements Comparable<MonthData> {
 
   private static final long serialVersionUID = -2485540634100516741L;
+  
+  final Logger logger = LoggerFactory.getLogger( MonthData.class );
 
   //--------
   private List<DayData>   _days ;
 
-  private HashMap<String,SimpleData>   _notFound;
+  private Map<String,SimpleData>   _notFound;
 
   private int _monthNumber  = -1;
   private int _yearNumber   = -1;
@@ -91,8 +96,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
   }
   //-----------------------
   public void dumpDataToFile(String homePath, Date begin) {
-    if (Config.DEBUG) 
-      System.out.println("dumping month " + toString()  );
+    logger.debug("dumping month {}", this );
     try{
       Output out = new Output( homePath + "/" + getFileName() );
       out.writeln( Constants.HEADER_XML );
@@ -123,9 +127,9 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
         if ( current.before(today) && current.after(  begin ) ) {
           out.writeln(  "<day>");
           out.writeln(  "<number>" + (1+i) + "</number>" );
-          Object obj = _days.get( i );
+          DayData obj = _days.get( i );
           if ( obj != null){
-            ((DayData)obj).dumpData( out );
+            obj.dumpData( out );
           } else {
             DayData.dumpEmptyData(out);
           }
@@ -138,8 +142,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
       // hits by day of week
       long [][] total = new long[7][3];
       for (int i=0; i < _days.size(); i++) {
-        Object obj = _days.get( i );
-        DayData day = (DayData)obj;
+        DayData day = _days.get( i );
         if (day != null) {
           total[(i+firstDay)%7][0] += day.getHits();
           total[(i+firstDay)%7][1] += day.getFiles();
@@ -235,12 +238,10 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
       /*
        *
        */
-      HashMap<String, SimpleData> map = new HashMap<String, SimpleData>();
-      if (Config.DEBUG) 
-      {
-        System.out.println("working on Countries");
-        System.out.println("col.size=="+col.size ());
-      }
+      Map<String, SimpleData> map = new HashMap<String, SimpleData>();
+      
+      logger.debug( " working on Countries,  col.size = {}", col.size ());
+      
       for ( Iterator<StringData> ite = col.iterator(); ite.hasNext() ;){
         StringData d = ite.next();
         String value = d.getData();
@@ -251,7 +252,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
         String country ;
         try
         {
-            java.net.InetAddress ia = java.net.InetAddress.getByName ( value );
+            InetAddress ia = InetAddress.getByName ( value );
             Locale l = net.wetters.InetAddressLocator.getLocale ( ia );
             country = l.getDisplayCountry ();
         }
@@ -267,11 +268,9 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
         }
         data.add( d.getCount() );        
       }
-      if (Config.DEBUG) 
-        System.out.println("map.size="+ map.size ());
+      logger.debug( "map.size = {}", map.size ());
       col = hashToList( map );
-      if (Config.DEBUG) 
-        System.out.println("col.size"+col.size ());
+      logger.debug( "col.size = ", col.size ());
       number = 0;
       out.writeln( "<users_countries>");
       for ( Iterator<StringData> ite = col.iterator(); ite.hasNext() ;){
@@ -289,7 +288,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
       number = 0;
       out.writeln( "<users>");
       for ( Iterator<StringData> ite = col.iterator(); ite.hasNext() ;number++){
-        StringData d = (StringData)ite.next();
+        StringData d = ite.next();
         out.writeln("<element><value>"+ Config.siteConfig.getRealUserInfo( d.getData() )+"</value><count>"+d.getCount()+"</count></element>");
       }
       out.writeln( "</users>");
@@ -317,7 +316,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
           number = 0;
           out.writeln( "<platforms>");
           for ( Iterator<StringData> ite = col.iterator(); ite.hasNext() && number<Config.maxOS;number++){
-            StringData d = (StringData)ite.next();
+            StringData d = ite.next();
             out.writeln("<element><value>"+d.getData()+"</value><count>"+d.getCount()+"</count></element>");
           }
           out.writeln( "</platforms>");
@@ -360,8 +359,8 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
   @SuppressWarnings("unchecked")
 	private Map<String, SimpleData> [] computeUserAgent2() {
     Set<String> set = _userAgents.keySet();
-    HashMap<String, SimpleData> browsers = new HashMap<String, SimpleData>();
-    HashMap<String, SimpleData> oses = new HashMap<String, SimpleData>();
+    Map<String, SimpleData> browsers = new HashMap<String, SimpleData>();
+    Map<String, SimpleData> oses = new HashMap<String, SimpleData>();
     for (Iterator<String> ite = set.iterator(); ite.hasNext(); )
     {
       String key = ite.next();
@@ -378,7 +377,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
           org.nioto.browser.Browser b = new org.nioto.browser.Browser( ua );
           // check browsers
           browser = b.getShortName () + "-" + b.getMajVersion () ;//+ b.getMinVersion();
-          String tmp = (String)org.nioto.browser.B.getLongName ( b.getShortName() );
+          String tmp = org.nioto.browser.B.getLongName ( b.getShortName() );
           if ( tmp ==null || tmp.length ()==0)
           {
               browser  ="unknown";
@@ -433,7 +432,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
   
   //--------
   private List<StringData> computeHits() {
-    HashMap<String, SimpleData> map = new HashMap<String, SimpleData>( _hits.size(), 1 );
+    Map<String, SimpleData> map = new HashMap<String, SimpleData>( _hits.size(), 1 );
     for (String str : map.keySet()) {
       if ( Utils.canOutputHit( str) ) {
         map.put( str, _hits.get(str) );

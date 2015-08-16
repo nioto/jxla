@@ -3,6 +3,7 @@ package org.novadeck.jxla.data;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.novadeck.jxla.tools.Output;
@@ -18,9 +19,9 @@ public class DayData implements java.io.Serializable {
   private MonthData     _father;
   
   // TODO: change to treemap
-  protected HashMap<String,Object>   _referers= new HashMap<String,Object>();
-  protected HashMap<String,String>   _remote_ip= new HashMap<String,String>();
-  protected HashMap<String,Object>   _hits= new HashMap<String,Object>();
+  protected Map<String,Object>   _referers= new HashMap<String,Object>();
+  protected Map<String,String>   _remote_ip= new HashMap<String,String>();
+  protected Map<String,Object>   _hits= new HashMap<String,Object>();
   long _traffic     = 0;
   long _hitsCount   = 0;
   long _pagesView   = 0;
@@ -65,7 +66,7 @@ public class DayData implements java.io.Serializable {
     _hitsCount++;
     _father.addHit( tmp );
 
-    long status = l.getStatus().longValue();
+    int status = l.getStatus().intValue();
     if ( status == 200 ){
         _files++;
       _father.addFile( tmp );

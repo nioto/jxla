@@ -80,12 +80,6 @@ public class PhpSniff extends Gecko {
       //result =
       b.setShortName ( B.getShortName ( match[1] ) );
       
-      // get the position of the last browser found
-            /*
-            System.out.println ("browser:" + result );
-            System.out.println ("long_name:" + match[1] );
-            System.out.println ("maj_ver:" + match[2] );
-             */
       b.setMajVersion ( match[2] );
       // parse the minor version string and look for alpha chars
       String min = ".0";
@@ -93,16 +87,8 @@ public class PhpSniff extends Gecko {
         if(!empty ( match[1])) {
           min = match[1] ;
         }
-                /*
-                if(!empty (match[2]))
-                    System.out.println ("letter_ver:" + match[2]);
-                 */
       }
       b.setMinVersion ( min );
-            /*
-             */
-      // insert findings into container
-      //System.out.println ("version:" );
     }
     //return result;
   }

@@ -13,7 +13,7 @@ public class Line {
   private String  _uri;
   private String  _referer;
   private String  _userAgent;
-  private Long    _status;
+  private Integer _status;
   private long    _size;
   private String  _user;
   private int     m_time;
@@ -91,7 +91,7 @@ public class Line {
 
     INSTANCE._referer    = referer;
     INSTANCE._userAgent  = userAgent;
-    INSTANCE._status     = new Long(Integer.parseInt( status ));
+    INSTANCE._status     = Integer.parseInt( status );
     INSTANCE._size       = size;
     INSTANCE._user       = user;
     INSTANCE.m_time      = time;
@@ -129,7 +129,7 @@ public class Line {
     return this._remoteIP;
   }
 
-  public Long getStatus(){
+  public Integer getStatus(){
     return this._status;
   }
 

@@ -3,19 +3,17 @@ package org.novadeck.jxla.config;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.io.File;
 
 import org.novadeck.jxla.tools.DNSCache;
 import org.novadeck.jxla.tools.History;
 import org.novadeck.jxla.tools.SearchEngine;
-import org.novadeck.jxla.tools.Utils;
 import org.novadeck.jxla.data.RegexpData;
 
 
 public class Config {
 
-  public static boolean DEBUG = Boolean.getBoolean ("DEBUG");
-  
   public static AbstractSiteConfig siteConfig ;
   // pages extension
   public static String[] pagesEntensions = null;
@@ -40,7 +38,7 @@ public class Config {
 
   public static String    indexFileName  = "index.xml";
 
-  // initialisze DNS informations
+  // initialize DNS informations
   public static void setDnsInfo( boolean  enable, String filename){
     dnsEnable = enable;
     if (dnsEnable && filename!=null){
@@ -61,18 +59,21 @@ public class Config {
       throw new IllegalArgumentException("directory of log files idoen't not existes, or is not readable");
     }
     
-    String[] list = f.list();
-    Pattern pFiles = Utils.compileRE( regexp ) ;
+    Pattern pFiles = null;
+    try {
+    	pFiles = Pattern.compile( regexp ) ;
+    } catch (PatternSyntaxException pse ){
+      throw new IllegalArgumentException("regexp for log files can't compile check it ", pse);
+    }
     
-    if ( pFiles == null)
-      throw new IllegalArgumentException("regexp for log files can't compile check it ");
     Collection<String> col = new ArrayList<String>();
+    String[] list = f.list();
     for (int i=0; i<list.length; i++) {
       if ( pFiles.matcher(list[i]).matches() ) {
         col.add( directory + (directory.endsWith("/")?  "":"/") + list[i] );
       }
     }
-    logsFiles = (String[])col.toArray( new String[0]);
+    logsFiles = col.toArray( new String[0]);
   }
 
   // set extensions for pages
@@ -202,7 +203,7 @@ public class Config {
     System.out.println("Default web page for your web server is '" + indexFileName+"'" );
 
     System.out.println("Available regexp for parsing logs are :" );
-    RegexpData.displayRegexp();
+    RegexpData.displayRegexp(System.out);
 
   }
 }

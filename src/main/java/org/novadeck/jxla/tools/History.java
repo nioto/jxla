@@ -1,13 +1,20 @@
 package org.novadeck.jxla.tools;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import org.novadeck.jxla.data.Site;
 import org.novadeck.jxla.data.SiteHistory;
-import org.novadeck.jxla.config.Config;
-
-import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class History {
 
+	final static Logger logger = LoggerFactory.getLogger( History.class );
+	
   private static String fileHistory;
 
   public static void setHistoryFile( String f ) {
@@ -27,29 +34,25 @@ public class History {
         FileInputStream ostream   = new FileInputStream( f );
         ObjectInputStream objIn   = new ObjectInputStream(ostream);
         SiteHistory site;
-        if (Config.DEBUG) 
-          System.out.println("available == "+objIn.available());
+        logger.debug( " available bytes = {}",objIn.available());
         try{
           while (true) {
             site = (SiteHistory)objIn.readObject();
             Site.addSite( site );
-            if (Config.DEBUG) 
-            {
-              System.out.println("loading " + site.getName() );
-              System.out.println("getFirstRecordDate" + site.getFirstRecordDate());
-              System.out.println("getLastRecordDate" + site.getLastRecordDate());
-            }
+            logger.debug( "loading {}", site.getName() );
+            logger.debug( "getFirstRecordDate = {}", site.getFirstRecordDate());
+            logger.debug( "getLastRecordDate = {}", site.getLastRecordDate());
           }
         } catch ( java.io.EOFException e ){
+        	logger.error( "Exception received from loading History file", e );
         }
         objIn.close();
         ostream.close();
       } else {
-        System.out.println("file doesn't exist, will be created at end of process");
+        logger.info("file doesn't exist, will be created at end of process");
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      System.err.println("something wrong happens when reading file " + fileHistory + " ex=" +e.getMessage()  );
+      logger.error( "something wrong happens when reading file {} ", fileHistory , e );
     }
   }
   public static void saveHistory  ( ){
@@ -69,8 +72,7 @@ public class History {
       }
       objIn.close();
     } catch (Exception e) {
-        e.printStackTrace();
-      System.err.println("cannot write to file " + fileHistory + " ex=" +e.getMessage()  );
+    	logger.error( "cannot write to file {} ", fileHistory , e );
     }
   }
 }

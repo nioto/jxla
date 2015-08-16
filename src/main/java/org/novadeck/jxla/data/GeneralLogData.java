@@ -10,15 +10,15 @@ public class GeneralLogData implements Serializable  {
   public static long total =0;
 
   // differents counters
-  protected HashMap<String, SimpleData>   _referers;
-  protected HashMap<String, SimpleData>   _keywords;
-  protected HashMap<String, SimpleData>   _remote_ip;
-  protected HashMap<String, SimpleData>   _hits;
-  protected HashMap<String, SimpleData>   _pagesView;
-  protected HashMap<String, SimpleData>   _files;
-  protected HashMap<String, SimpleData>   _status;
-  protected HashMap<String, SimpleData>   _userAgents;
-  protected HashMap<String, SimpleData>   _users;
+  protected Map<String, SimpleData>   _referers;
+  protected Map<String, SimpleData>   _keywords;
+  protected Map<String, SimpleData>   _remote_ip;
+  protected Map<String, SimpleData>   _hits;
+  protected Map<String, SimpleData>   _pagesView;
+  protected Map<String, SimpleData>   _files;
+  protected Map<String, SimpleData>   _status;
+  protected Map<String, SimpleData>   _userAgents;
+  protected Map<String, SimpleData>   _users;
   protected long      _traffic;
 
   public GeneralLogData() {
@@ -68,7 +68,7 @@ public class GeneralLogData implements Serializable  {
     inc( s , _pagesView);
   }
   //-----------------------
-  protected void inc( String key, HashMap<String, SimpleData> map ){
+  protected void inc( String key, Map<String, SimpleData> map ){
     SimpleData obj = map.get( key );
     if (obj == null) {
       obj = new SimpleData();
@@ -78,7 +78,7 @@ public class GeneralLogData implements Serializable  {
   }
 
   //--------
-  protected long getCount( HashMap<String, SimpleData> map ) {
+  protected long getCount( Map<String, SimpleData> map ) {
     Set<String> set = map.keySet();
     long total = 0;
     for (Iterator<String> ite = set.iterator(); ite.hasNext(); ) {

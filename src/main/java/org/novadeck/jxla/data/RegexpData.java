@@ -1,5 +1,6 @@
 package org.novadeck.jxla.data;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,12 +10,16 @@ import java.util.regex.PatternSyntaxException;
 
 import org.novadeck.jxla.config.Config;
 import org.novadeck.jxla.tools.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
 @SuppressWarnings("serial")
 public class RegexpData extends SimpleData
 {
+	
+	final static Logger logger = LoggerFactory.getLogger( RegexpData.class );
   
   public static final String    HOSTNAME    = "host";
   public static final String    REMOTE_IP   = "remote_ip";
@@ -99,14 +104,16 @@ public class RegexpData extends SimpleData
     _time     = -1;
     _server   = -1;
     // analyze s as a simple regexep
-    if ( Utils.isEmpty ( s ) )
-    { quit ( "regexp is empty "); }
+    if ( Utils.isEmpty ( s ) ) {
+    	logger.error( " Regexp is empty !!!" );
+    	quit ( "regexp is empty ");
+    }
     int length  = s.length ();
     int current = 0;
     char[] arr  = s.toCharArray ();
     int pos     = 1;
     
-    StringBuffer regexp = new StringBuffer ();
+    StringBuilder regexp = new StringBuilder();
     
     while ( current < length )
     {
@@ -135,7 +142,7 @@ public class RegexpData extends SimpleData
         case IDENTIFIER:
           // load the parameter
           current++;
-          StringBuffer sb = new StringBuffer ();
+          StringBuilder sb = new StringBuilder();
           boolean found = false;
           while ( (current<length) && ( !found ) )
           {
@@ -214,9 +221,6 @@ public class RegexpData extends SimpleData
         case WILDCARD:
           current ++;
           regexp.append ( "[^ ]*" );
-/*          if (current<length)
-          else
-            regexp.append( ".*" );*/
           break;
         case DELIMITER:
           regexp.append ( DELIMITER );
@@ -249,16 +253,13 @@ public class RegexpData extends SimpleData
           current ++;
           break;
         default:
+        	logger.error( "malformed regexp = >  {} < look @  {}", s, arr[current] );
           quit ("malformed regexp = >" + s + "< look @ " + arr[current] );
       }
     }
     regexp.append ('$');
     compiledRegexp = regexp.toString ();
-    if (Config.DEBUG)
-    {
-      System.out.println ("re==");
-      System.out.println (compiledRegexp);
-    }
+    logger.debug( "compiled re = {}", compiledRegexp);
     try
     {
       _pattern  = Pattern.compile ( compiledRegexp );
@@ -302,8 +303,7 @@ public class RegexpData extends SimpleData
   
   public String getRemoteIP ()
   {
-    String ip = getExpr ( _ip );
-    return ip;
+    return getExpr ( _ip );
   }
   
   public String getUser ()
@@ -399,8 +399,8 @@ public class RegexpData extends SimpleData
   //----------------
   private void quit (String s )
   {
-    System.err.println ("ERROR : " + s);
-    System.err.println ("exiting ");
+    logger.error( "ERROR :  {}", s);
+    logger.error( "exiting ");
     System.exit (0);
   }
   
@@ -416,22 +416,21 @@ public class RegexpData extends SimpleData
     if (_lastMatched == null) _lastMatched = re;
     if (! _availableRegexp.contains ( re ) )
     { _availableRegexp.add ( re );  }
-    _arrayRe      =  (RegexpData[])_availableRegexp.toArray ( new RegexpData[0] );
+    _arrayRe      = _availableRegexp.toArray ( new RegexpData[0] );
   }
   //----------------
   public static void updateList ()
   {
     if ( _availableRegexp.size () ==1) return;
     Collections.sort ( _availableRegexp );
-    _arrayRe      =  (RegexpData[])_availableRegexp.toArray ( new RegexpData[0] );
+    _arrayRe      = _availableRegexp.toArray ( new RegexpData[0] );
   }
   
   public static Line getLine ( String s )
   {
     if ( Utils.isComment ( s ) )
     {
-      if (Config.DEBUG)
-        System.out.println ("comment");
+      logger.debug ( "comment");
       return null;
     }
     s = s.trim ();
@@ -473,20 +472,18 @@ public class RegexpData extends SimpleData
   }
   
   //==========================================
-  public final static void dumpCounters ()
+  public final static void dumpCounters (PrintStream out)
   {
-    for (int i=0; i<_arrayRe.length; i++)
-    {
-      System.out.println ("re  = " +_arrayRe[i].initialRegexp);
-      System.out.println ("match " + _arrayRe[i].getCount ());
+    for (int i=0; i<_arrayRe.length; i++) {
+      out.println ("re  = " +_arrayRe[i].initialRegexp);
+      out.println ("match " + _arrayRe[i].getCount ());
     }
   }
   //==========================================
-  public final static void displayRegexp ()
+  public final static void displayRegexp (PrintStream out)
   {
-    for (int i=0; i<_arrayRe.length; i++)
-    {
-      System.out.println (_arrayRe[i].initialRegexp);
+    for (int i=0; i<_arrayRe.length; i++) {
+      out.println (_arrayRe[i].initialRegexp);
     }
   }  
 }

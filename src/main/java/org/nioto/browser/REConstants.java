@@ -63,8 +63,8 @@ public class REConstants {
       
       RE_MINVERSION  = Pattern.compile ( Constants.RE_MINVERSION );
     } catch ( PatternSyntaxException mpe ) {
-      mpe.printStackTrace ();
-      System.exit (0);
+    	// Should never happen
+      throw new IllegalArgumentException( mpe );
     }
   }
 }

@@ -1,9 +1,3 @@
-/*
- * $Source: /cvsroot/jxla/jxla/src/org/novadeck/jxla/xml/Constants.java,v $
- * $Revision: 1.4 $
- * $Date: 2005/04/05 22:03:00 $
- * $Author: nioto $
- */
 package org.novadeck.jxla.xml;
 
 

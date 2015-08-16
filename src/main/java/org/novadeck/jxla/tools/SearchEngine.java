@@ -6,13 +6,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.novadeck.jxla.config.Config;
 import org.novadeck.jxla.data.SimpleData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 public class SearchEngine  extends SimpleData {
 
 
+	final Logger logger = LoggerFactory.getLogger( SearchEngine.class );
+	
   private String _domain;
   private String[] _parameters;
   private String _name;
@@ -27,8 +30,7 @@ public class SearchEngine  extends SimpleData {
   //----------------
   private SearchEngine( String domain, String parametername, String familiarName){
     _domain       = domain;
-    _parameters   = new String[1];
-    _parameters[0]= parametername + "=";
+    _parameters   = new String[]{ parametername + "=" };
     _name         = familiarName;
   }
   private void addParameter(String parameter){
@@ -59,7 +61,7 @@ public class SearchEngine  extends SimpleData {
   }
   //----------------
   /**
-   *   return the keyword(s) urldecoded bye java.net.URLDecoder.decode
+   *   return the keyword(s) urldecoded by java.net.URLDecoder.decode
    */
   public String getKeyword( String fullUri ) {
     int i = fullUri.indexOf('?');
@@ -90,7 +92,7 @@ public class SearchEngine  extends SimpleData {
       try{
         keyword = java.net.URLDecoder.decode(keyword, "UTF-8");
       } catch (Exception e ){
-        System.err.println(e.getMessage ()  +" on " + keyword );
+        logger.error("Exception on keyword : {} ", keyword, e );
         // if keyword ends with %X or % only, just remove this part
         int len = keyword.length ();
         int index = keyword.lastIndexOf ('%');
@@ -116,9 +118,9 @@ public class SearchEngine  extends SimpleData {
                 }
                 keyword += " ( via Google Cache )";
             }
-            else
-                if (Config.DEBUG) 
-                  System.out.println( keyword );
+            else {
+            	logger.debug( keyword );
+            }
         }
     }
 
@@ -135,7 +137,7 @@ public class SearchEngine  extends SimpleData {
   public static void addSearchEngine( String name, String domain, String param ) {
     SearchEngine se = null;
     for ( Iterator<SearchEngine> ite = _searchEngines.iterator (); se ==null && ite.hasNext (); ){
-      SearchEngine tmp = (SearchEngine)ite.next ();
+      SearchEngine tmp = ite.next ();
       if ( tmp.match ( domain) ){
         se = tmp;
       }
@@ -151,7 +153,7 @@ public class SearchEngine  extends SimpleData {
   //----------------
   public static void updateList() {
     Collections.sort( _searchEngines );
-    _arrayEngines  = (SearchEngine[]) _searchEngines.toArray( new SearchEngine[0] );
+    _arrayEngines  = _searchEngines.toArray( new SearchEngine[0] );
   }
 
   public static String[] getKeywords( String host, String uri ) {
@@ -167,9 +169,7 @@ public class SearchEngine  extends SimpleData {
 
     if (i < _arrayEngines.length) {
       SearchEngine se = _arrayEngines[i];
-      res = new String[2];
-      res[0]  = se.getName();
-      res[1]  = se.getKeyword( uri );
+      res = new String[]{se.getName(), se.getKeyword(uri)};
     }
     if ( (res != null) && (res[1] != null))
       return res;

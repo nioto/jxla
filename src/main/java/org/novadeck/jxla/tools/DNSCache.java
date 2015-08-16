@@ -1,25 +1,31 @@
 package org.novadeck.jxla.tools;
 
-import org.novadeck.jxla.config.Config;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class DNSCache {
 
-  HashMap<String,String> _cache ;
-  transient int     _added ;
-  transient String  _filename;
-  transient long    _time=0;
-  transient int _failed =0;
-  public DNSCache( HashMap<String, String> map ) {
+	final static Logger logger = LoggerFactory.getLogger( DNSCache.class );
+	
+  Map<String,String> _cache ;
+  int     _added ;
+  String  _filename;
+  long    _time=0;
+  int _failed =0;
+  
+  public DNSCache( Map<String, String> map ) {
     _cache        = map;
     _added        = 0;
   }
@@ -32,11 +38,6 @@ public class DNSCache {
   private void addEntry( String ip, String hostName ) {
     _added ++;
     _cache.put( ip, hostName);
-/*    if (_added > 100){
-      dump( );
-      _added =0;
-    }
- */
   }
 
   private void setFileName( String file ) {
@@ -46,22 +47,19 @@ public class DNSCache {
     return _filename;
   }
   public String gethostName( String ip ){
-    Object obj  = _cache.get( ip );
-    if (obj == null) {
-      String s = ip;
-long begin = System.currentTimeMillis ();
+    String name  = _cache.get( ip );
+    if (name == null) {
       try {
         InetAddress r = InetAddress.getByName( ip );
-        s = r.getHostName();
+        name = r.getHostName();
       }
       catch (UnknownHostException e) {
-_failed++;
+      	_failed++;
+      	name = ip;
       }
-_time += ( System.currentTimeMillis () -begin);
-      addEntry( ip, s ) ;
-      return s;
+      addEntry( ip, name ) ;
     }
-    return obj.toString();
+    return name;
   }
 
   public String toString(){
@@ -76,7 +74,7 @@ _time += ( System.currentTimeMillis () -begin);
         FileInputStream ostream   = new FileInputStream( f );
         ObjectInputStream objIn   = new ObjectInputStream(ostream);
         @SuppressWarnings("unchecked")
-				HashMap<String, String> map = (HashMap<String, String>)objIn.readObject();
+				Map<String, String> map = (Map<String, String>)objIn.readObject();
         cache = new DNSCache( map );
         cache.setFileName( file );
         objIn.close();
@@ -84,24 +82,23 @@ _time += ( System.currentTimeMillis () -begin);
       }
       else{
         cache = new DNSCache( file );
-        System.err.println("DNS cache file doesn't exist, it will be created at end");
+        logger.error("DNS cache file doesn't exist, it will be created at end");
       }
     } catch (Exception e) {
-      System.err.println("something wrong happens when reading file " + file + " ex=" +e.getMessage()  );
+      logger.error( "something wrong happened when reading file {}", file, e);
       cache = new DNSCache( file );
     }
     return cache;
   }
 
   public void dump( ) {
-    if ( _added == 0){
-      System.out.println("no added entry in dns , not writing a new file");
+    if ( _added == 0 ){
+      logger.debug( "no added entry in dns , not writing a new file");
     }
-    if (Config.DEBUG) 
-      System.out.println("dumping dns cache");
-System.out.println("added " + _added + " entries " );    
-System.out.println("failed =" + _failed+ " entries " );    
-System.out.println("time to reverse ==" + _time);
+    logger.debug("dumping dns cache");
+    logger.debug("added {} entries ", _added );    
+    logger.debug("failed {} entries ", _failed );    
+    logger.debug("time to reverse : {}", _time);
     try{
       File f = new File( _filename );
       if (f.exists()) {
@@ -113,20 +110,15 @@ System.out.println("time to reverse ==" + _time);
       objIn.flush();
       objIn.close();
     } catch (Exception e) {
-        e.printStackTrace();
-        System.err.println("something wrong happens when writing file " + _filename );
+    		logger.error("something wrong happens when writing file {}", _filename, e );
     }
   }
   
-  public HashMap<String, String> getReverseMap()
-  {
-      Set<String> s = _cache.keySet ();
-      HashMap<String, String> m = new HashMap<String, String>();
-      for ( Iterator<String> ite = s.iterator (); ite.hasNext () ;)
-      {
-          String key = ite.next ();
-          m.put ( _cache.get ( key ), key );
-      }
+  public Map<String, String> getReverseMap() {
+      Map<String, String> m = new HashMap<String, String>( _cache.size()+1, 1);
+      for (Entry<String, String> entry : m.entrySet()) {
+				m.put( entry.getValue(), entry.getKey() );
+			}
       return m;
   }
 

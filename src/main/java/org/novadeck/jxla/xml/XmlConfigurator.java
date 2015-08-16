@@ -1,14 +1,12 @@
-/*
- * $Source: /cvsroot/jxla/jxla/src/org/novadeck/jxla/xml/XmlConfigurator.java,v $
- * $Revision: 1.4 $
- * $Date: 2005/04/05 22:03:00 $
- * $Author: nioto $
- */
 package org.novadeck.jxla.xml;
 
 
 import java.util.StringTokenizer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
+
 import javax.xml.parsers.*;
 
 import org.novadeck.jxla.config.Config;
@@ -18,6 +16,8 @@ import org.novadeck.jxla.tools.History;
 public class XmlConfigurator {
 
 
+	final static Logger logger = LoggerFactory.getLogger( XmlConfigurator.class );
+	
   public static void configure( String filepath ) throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
@@ -78,7 +78,7 @@ public class XmlConfigurator {
       } else if ( Constants.DNS_FILECACHE.equals( name )) {
         fileDNS = n.getFirstChild().getNodeValue() ;
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.err.println("wrong node for DNS parameters :" + name );
+        logger.error( "wrong node for DNS parameters : {}", name );
       }
     }
     Config.setDnsInfo( dnsenable, fileDNS );
@@ -105,11 +105,11 @@ public class XmlConfigurator {
           if ( Constants.LOGLINE_RE.equals( name0 )) {
             Config.addLogLineFormat( n0.getFirstChild().getNodeValue() );
           } else if ( n0.getNodeType() == Node.ELEMENT_NODE ) {
-            System.err.println("wrong node for Log line format parameters :" + name0 );
+            logger.error( "wrong node for Log line format parameters : {}", name0 );
           }
         }
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.err.println("wrong node for Log files parameters :" + name );
+      	logger.error( "wrong node for Log files parameters : {}", name );
       }
     }
     Config.setLogFiles( directory, regexp);
@@ -131,7 +131,7 @@ public class XmlConfigurator {
           Config.addPageExtension( st.nextToken().trim() );
         }
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.err.println("wrong node for extensions parameters :" + name );
+      	logger.error( "wrong node for extensions parameters : {}", name );
       }
     }
   }
@@ -167,7 +167,7 @@ public class XmlConfigurator {
         String val = n.getFirstChild().getNodeValue();
         Config.setMaxOS ( Integer.parseInt( val ) );
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.err.println("wrong node for max values parameters :" + name );
+      	logger.error( "wrong node for max values parameters : {}", name );
       }
     }
   }
@@ -200,13 +200,13 @@ public class XmlConfigurator {
           } else if ( Constants.SE_PARAMETER.equals( name0 )) {
             paramSE  = n0.getFirstChild().getNodeValue();
           } else if ( n0.getNodeType() == Node.ELEMENT_NODE ) {
-            System.err.println("wrong node for search engines parameters :" + name0 );
+          	logger.error( "wrong node for search engines parameters : {}", name0 );
           }
         }
         if ( domainSE !=null && nameSE !=null && paramSE !=null)
           Config.addSearchEngine(nameSE, domainSE, paramSE );
       } else if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-        System.err.println("wrong node for extensions parameters :" + name );
+      	logger.error( "wrong node for extensions parameters : {}", name );
       }
     }
   }
@@ -223,9 +223,8 @@ public class XmlConfigurator {
   public static void main( String args[] ){
     try{
       configure( args[0] );
-    }catch ( Throwable t ){
-      t.printStackTrace();
-      System.exit(1);
+    } catch ( Throwable t ){
+    	logger.error( "Error calling configure()", t);
     }
   }
 }

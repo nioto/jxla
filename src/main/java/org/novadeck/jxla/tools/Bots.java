@@ -26,7 +26,7 @@ public class Bots
     
     public static String getBotName( String bot )
     {
-        return (String) m_botNames.get ( bot ); 
+        return m_botNames.get ( bot ); 
     }
     
     private static List<String> getBots ()
