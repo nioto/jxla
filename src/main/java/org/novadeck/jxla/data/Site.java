@@ -90,14 +90,14 @@ public class Site {
     
     
     //============================================================================
-    public StringBuffer getMonthData( int month, int year ) {
+    public StringBuilder getMonthData( int month, int year ) {
         MonthData monthData = getMonth( month, year );
         if (monthData == null) return null;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( "<site>\n" );
-        sb.append( "<name>"+_name + "</name>\n") ;
-        sb.append( "<hits>" + monthData.getHits()+"</hits>\n");
-        sb.append( "<bandwidth>" + monthData.getTraffic()+"</bandwidth>\n");
+        sb.append( "<name>" ).append( _name ).append( "</name>\n") ;
+        sb.append( "<hits>" ).append( monthData.getHits() ).append( "</hits>\n");
+        sb.append( "<bandwidth>" ).append( monthData.getTraffic() ).append( "</bandwidth>\n");
         sb.append( "</site>\n" );
         return sb;
     }
@@ -129,9 +129,9 @@ public class Site {
     
     //============================================================================
     // XML creation
-    public StringBuffer getData(String statsDirectory) {
+    public StringBuilder getData(String statsDirectory) {
         Collections.sort( _months );
-        StringBuffer output = new StringBuffer( Constants.HEADER_XML );
+        StringBuilder output = new StringBuilder( Constants.HEADER_XML );
         output.append( "<site>\n" );
         output.append( "<name>"+_name + "</name>\n") ;
         MonthData m = _months.get( 0 );

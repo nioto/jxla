@@ -56,8 +56,8 @@ public class SiteHistory implements java.io.Serializable {
   public boolean allReadyParse( Date d) {
     return d.before( lastRecord ) || d.equals( lastRecord ) ;
   }
-  public StringBuffer getSummary() {
-    StringBuffer sb = new StringBuffer();
+  public StringBuilder getSummary() {
+  	StringBuilder sb = new StringBuilder();
     if ( months.isEmpty() ) return sb;
     Iterator<MonthHistory> ite = months.iterator();
     while (ite.hasNext()) {
@@ -83,18 +83,18 @@ public class SiteHistory implements java.io.Serializable {
       this.totalPages   = pages;
       this.totalTraffic = traffic;
     }
-    public StringBuffer getData() {
-      StringBuffer output = new StringBuffer();
+    public StringBuilder getData() {
+    	StringBuilder output = new StringBuilder();
       output.append( "<month>\n" );
-      output.append( "<name>" + Constants.getMonth ( month ) + "</name>\n");
-      output.append( "<number>" + (1+ month) + "</number>\n");
-      output.append( "<year>" + (1900+ year) + "</year>");
+      output.append( "<name>" ).append( Constants.getMonth ( month ) ).append( "</name>\n" );
+      output.append( "<number>" ).append( (1+ month) ).append( "</number>\n" );
+      output.append( "<year>" ).append( (1900+ year) ).append( "</year>" );
       String filename =  "usage_" + ( year + 1900 ) + "" + ( month+1<10 ? "0" : "" ) + (month+1) + ".xml";
-      output.append( "<url>" +   filename + "</url>\n");
-      output.append( "<hits>"    + totalHits    + "</hits>\n"   );
-      output.append( "<files>"   + totalFiles   + "</files>\n"  );
-      output.append( "<pages>"   + totalPages   + "</pages>\n"  );
-      output.append( "<traffic>" + totalTraffic + "</traffic>\n"  );
+      output.append( "<url>" ).append( filename ).append( "</url>\n" );
+      output.append( "<hits>" ).append( totalHits ).append( "</hits>\n" );
+      output.append( "<files>" ).append( totalFiles ).append( "</files>\n" );
+      output.append( "<pages>" ).append( totalPages ).append( "</pages>\n" );
+      output.append( "<traffic>" ).append( totalTraffic ).append( "</traffic>\n" );
       output.append( "</month>\n" );
       return output;
     }

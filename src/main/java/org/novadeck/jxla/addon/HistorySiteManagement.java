@@ -1,12 +1,13 @@
 package org.novadeck.jxla.addon;
 
 import java.io.File;
+
+import org.novadeck.jxla.data.Site;
 import org.novadeck.jxla.tools.History;
-import org.novadeck.jxla.data.*;
 
 /**
  *   This class illustrates how to modify the site cache history, to remove or modify
- *  the site information stores in the history-site file*
+ *  the site information stores in the history-site file
  *
  */
 

@@ -92,7 +92,7 @@ public class BrowserCore {
   public static String str_replace ( String pattern, String replace, String s ) {
     if (s==null|| pattern==null)
       return null;
-    StringBuffer sb = new StringBuffer ();
+    StringBuilder sb = new StringBuilder();
     for ( int i = s.indexOf ( pattern); i>=0; i=s.indexOf ( pattern) ) {
       sb.append ( s.substring (0, i) );
       sb.append ( replace );

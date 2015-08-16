@@ -133,7 +133,7 @@ public class Main
         logger.debug( " nb of sites = {}", list.length);
         for ( int k=0; k < list.length; k++ )
         {
-            StringBuffer sb = new StringBuffer ();
+            StringBuilder sb = new StringBuilder ();
             Site s = Site.getSite ( list[k] );
             logger.debug( "dumping for site = {}", s.getName ());
             try
@@ -190,19 +190,17 @@ public class Main
                     //new month
                     if (_begin.getMonth () != _prev.getMonth () )
                     {
-                        StringBuffer sb  = site.getMonthData ( _begin.getMonth (), _begin.getYear () );
-                        if (sb != null)
-                        {
+                    		StringBuilder sb  = site.getMonthData ( _begin.getMonth (), _begin.getYear () );
+                        if (sb != null) {
                             String currentDir = path + "/" + (1900+_begin.getYear ()) + "/" +(1+_begin.getMonth ()) +"/";
                             String summaryPage = currentDir + Config.summaryPageName;
                             Output _month ;
-                            if ( ! files.containsKey ( summaryPage ) )
-                            {
+                            if ( ! files.containsKey ( summaryPage ) ) {
                                 File f = new File ( currentDir );
-                                if ( ! f.exists () )
-                                {
-                                    if (!f.mkdirs ())
+                                if ( ! f.exists () ) {
+                                    if (!f.mkdirs ()) {
                                     	logger.error( "ERROR creating {}", f.getPath () );
+                                    }
                                 }
                                 _month = new Output ( summaryPage );
                                 logger.debug( "GLOBAL = {}", summaryPage);
@@ -210,9 +208,7 @@ public class Main
                                 _month.writeln ( "<monthsummary>" );
                                 _month.writeln ( "<name>"  + Constants.getMonth(_begin.getMonth ()) + "</name>");
                                 files.put ( summaryPage , _month );
-                            }
-                            else
-                            {
+                            } else {
                                 _month = files.get ( summaryPage );
                             }
                             _month.writeln ( sb.toString () );
@@ -221,24 +217,18 @@ public class Main
                     _prev   = _begin;
                     _begin  = new Date ( _prev.getTime ()+24*60*60*1000 );
                 }
-            }
-            catch (Exception e )
-            {
+            } catch (Exception e ) {
                 e.printStackTrace ();
             }
         }
         
         Set<String> keys = files.keySet ();
-        for ( Iterator<String> ite = keys.iterator (); ite.hasNext (); )
-        {
-            try
-            {
+        for ( Iterator<String> ite = keys.iterator (); ite.hasNext (); ) {
+            try {
                 Output _month = files.get ( ite.next () );
                 _month.writeln ( "</monthsummary>" );
                 _month.close ();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace ();
             }
         }

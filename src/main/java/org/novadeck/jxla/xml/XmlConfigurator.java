@@ -16,7 +16,7 @@ import org.novadeck.jxla.tools.History;
 public class XmlConfigurator {
 
 
-	final static Logger logger = LoggerFactory.getLogger( XmlConfigurator.class );
+	private final static Logger logger = LoggerFactory.getLogger( XmlConfigurator.class );
 	
   public static void configure( String filepath ) throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -27,7 +27,7 @@ public class XmlConfigurator {
     if ( Constants.ROOT.equals( n.getNodeName() ) )
       configure( n );
     else
-      throw new IllegalArgumentException(" check your config file, the root node is not jxla");
+      throw new IllegalArgumentException(" check your config file, the root node is not " + Constants.ROOT );
   }
 
 
@@ -178,7 +178,7 @@ public class XmlConfigurator {
   }
 
 
-  private static void   configureSearchEngines( Node node ) {
+  private static void configureSearchEngines( Node node ) {
     NodeList nlist = node.getChildNodes();
     String nameSE   = null;
     String paramSE  = null;

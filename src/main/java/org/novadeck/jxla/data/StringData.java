@@ -1,23 +1,26 @@
 package org.novadeck.jxla.data;
 
-
+/**
+ * 
+ * @author nioto
+ *
+ */
 @SuppressWarnings("serial")
 public class StringData extends SimpleData {
 
-  String _uri;
+  private String text;
 
-  public StringData(String uri) {
+  public StringData(final String str) {
     super();
-    _uri = uri;
+    text = str;
   }
 
-  public StringData(String uri, long l) {
+  public StringData(final String str, final long l) {
     super( l );
-    _uri = uri;
+    text = str;
   }
 
   public String getData(){
-    return "<![CDATA["+_uri+"]]>";
+    return "<![CDATA["+text+"]]>";
   }
-
 }

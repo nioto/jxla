@@ -1,8 +1,16 @@
 package org.novadeck.jxla.data;
 
-import java.util.*;
-
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.novadeck.jxla.tools.Output;
 
 @SuppressWarnings("serial")
 public class GeneralLogData implements Serializable  {
@@ -107,4 +115,35 @@ public class GeneralLogData implements Serializable  {
     return getCount( _hits );
   }
 
+  protected <T extends SimpleData> void dump(String node, Output output, List<StringData> col, int max)
+  throws IOException{
+    int number = 0;
+    output.write("<");
+    output.write(node);
+    output.writeln(">");
+    
+    for ( Iterator<StringData> ite = col.iterator(); ite.hasNext() && number < max; number++){
+      StringData d = ite.next();
+      output.write("<element><value>");
+      output.write( d.getData() );
+      output.write( "</value><count>" );
+      output.write( d.getCount());
+      output.writeln( "</count></element>");
+    }
+    
+    output.write("</");
+    output.write(node);
+    output.writeln(">");
+  }
+  //--------
+  protected<T extends SimpleData> List<StringData> hashToList( Map<String, T> map ) {
+    Set<String> set = map.keySet();
+    List<StringData> list   = new ArrayList<StringData>();
+    for (Iterator<String> ite = set.iterator(); ite.hasNext(); ) {
+      String obj = ite.next();
+      list.add( new StringData( obj, map.get(obj).getCount()) );
+    }
+    Collections.sort( list );
+    return list;
+  }
 }

@@ -39,6 +39,9 @@ public class Output{
     _out.write( s.getBytes(Constants.ENCODING) );
     //    _out.write( LINE_SEPARATOR );
   }
+  public void write( long l ) throws IOException {
+  	write(Long.toString(l) );
+  }
   public void writeln( String s ) throws IOException {
     if (_isDevNull)
       return;
