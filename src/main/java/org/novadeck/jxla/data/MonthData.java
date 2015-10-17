@@ -4,7 +4,6 @@ package org.novadeck.jxla.data;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,7 +41,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
     _monthNumber  = month;
     _yearNumber   = year;
     _notFound     = new HashMap<String,SimpleData> ();
-    GregorianCalendar dateTMP = new GregorianCalendar( 1900 + _yearNumber, _monthNumber , 1);
+    GregorianCalendar dateTMP = new GregorianCalendar( _yearNumber, _monthNumber , 1);
     dateTMP.setTimeZone( TimeZone.getTimeZone("Central Standard Time") );
     firstDay  = dateTMP.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY;
     int nDays = dateTMP.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
@@ -75,7 +74,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
   //-----------------------
   private String getFileName(){
     int month = _monthNumber +1;
-    return "usage_" + (_yearNumber +1900) + "" + ( month<10 ? "0" : "" ) + month + ".xml";
+    return "usage_" + _yearNumber + "" + ( month<10 ? "0" : "" ) + month + ".xml";
   }
   //-----------------------
   public StringBuilder getData() {
@@ -83,7 +82,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
     output.append( "<month>\n" );
     output.append( "<name>" ).append( getMonthName() ).append( "</name>\n");
     output.append( "<number>" ).append( 1+_monthNumber ).append( "</number>\n");
-    output.append( "<year>" ).append( 1900+_yearNumber ).append( "</year>");
+    output.append( "<year>" ).append( _yearNumber ).append( "</year>");
     output.append( "<url>" ).append( getFileName() ).append( "</url>\n");
     output.append( "<hits>" ).append( getCount( _hits) ).append( "</hits>\n"   );
     output.append( "<files>" ).append( getCount( _files ) ).append( "</files>\n"  );
@@ -93,14 +92,14 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
     return output;
   }
   //-----------------------
-  public void dumpDataToFile(String homePath, Date begin) {
+  public void dumpDataToFile(String homePath, MyDate begin) {
     logger.debug("dumping month {}", this );
     try{
       Output out = new Output( homePath + "/" + getFileName() );
       out.writeln( Constants.HEADER_XML );
       out.writeln( "<month>");
       out.writeln( "<name>" + getMonthName() + "</name>");
-      out.writeln( "<year>" + (1900+_yearNumber) + "</year>");
+      out.writeln( "<year>" + _yearNumber + "</year>");
       out.writeln( "<total>");
       out.writeln( "<hits>"     + getCount( _hits       ) + "</hits>"   );
       out.writeln( "<files>"    + getCount( _files      ) + "</files>"  );
@@ -113,11 +112,11 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
 
       /////////////////////
       // hits by day
-      Date today = new Date();
+      MyDate today = new MyDate();
       out.writeln( "<hitsbyday>");
 
       for (int i=0; i < _days.size(); i++) {
-        Date current = new Date( _yearNumber , _monthNumber, 1+i, 23, 59, 59 );
+        MyDate current = new MyDate( _yearNumber , _monthNumber, 1+i, 23, 59, 59 );
         if ( current.before(today) && current.after(  begin ) ) {
           out.writeln(  "<day>");
           out.writeln(  "<number>" + (1+i) + "</number>" );
@@ -239,15 +238,15 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
 
       /////////////////////
       // Browser
-      Map<String, SimpleData> tmp [] = computeUserAgent ();
+      Pair<Map<String, SimpleData>> pair = computeUserAgent ();
       if ( Config.maxBrowsers >0) {
-        col = hashToList( tmp[0] );
+        col = hashToList( pair.getLeft() );
         dump( "user_agents", out, col, Config.maxBrowsers);
       }
       ////////
       // OS
       if ( Config.maxOS > 0) {
-        col = hashToList( tmp[1] );
+        col = hashToList( pair.getRight() );
         dump( "platforms", out, col, Config.maxOS );
       }
 
@@ -259,13 +258,8 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
     }
   }
 
-
-
-
-
   //--------
-  @SuppressWarnings("unchecked")
-	private Map<String, SimpleData> [] computeUserAgent() {
+	private Pair<Map<String, SimpleData>> computeUserAgent() {
     Map<String, SimpleData> browsers = new HashMap<String, SimpleData>();
     Map<String, SimpleData> oses = new HashMap<String, SimpleData>();
     for (String key : _userAgents.keySet() ) {
@@ -308,8 +302,7 @@ public class MonthData extends GeneralLogData implements Comparable<MonthData> {
         oses.put( os, new SimpleData(total) );
       }      
     }
-    Object arr[] = { browsers, oses };
-    return (Map<String, SimpleData> [])arr;
+    return new Pair<Map<String, SimpleData>> ( browsers, oses );
   }
   
   public int compareTo(MonthData month){

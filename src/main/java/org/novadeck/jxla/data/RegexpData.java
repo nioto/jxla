@@ -62,9 +62,9 @@ public class RegexpData extends SimpleData
   public static final char      SPACE       = ' ';
   public static final char      SLASH       = '/';
   public static final char      DOUBLEPOINT = ':';
-  public static final char      CROCHET_O = '[';
-  public static final char      CROCHET_F = ']';
-  public static final char      TIRET     = '-';
+  public static final char      BRACKET_OPEN = '[';
+  public static final char      BRACKET_CLOSE = ']';
+  public static final char      HYPHEN     = '-';
   
   private Pattern   _pattern    = null;
   private Matcher _res;
@@ -238,18 +238,18 @@ public class RegexpData extends SimpleData
           regexp.append ( DOUBLEPOINT );
           current ++;
           break;
-        case CROCHET_O:
+        case BRACKET_OPEN:
           regexp.append ( '\\' );
-          regexp.append ( CROCHET_O);
+          regexp.append ( BRACKET_OPEN);
           current ++;
           break;
-        case CROCHET_F:
+        case BRACKET_CLOSE:
           regexp.append ( '\\' );
-          regexp.append ( CROCHET_F );
+          regexp.append ( BRACKET_CLOSE );
           current ++;
           break;
-        case TIRET:
-          regexp.append ( TIRET );
+        case HYPHEN:
+          regexp.append ( HYPHEN );
           current ++;
           break;
         default:

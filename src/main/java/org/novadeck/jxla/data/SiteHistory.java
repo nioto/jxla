@@ -1,6 +1,5 @@
 package org.novadeck.jxla.data;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,8 +12,8 @@ public class SiteHistory implements java.io.Serializable {
 
   String    siteName ;
   List<MonthHistory>      months ;
-  Date      lastRecord ;
-  Date      firstRecord ;
+  MyDate      lastRecord ;
+  MyDate      firstRecord ;
   MonthData lastMonth ;
 
 
@@ -22,7 +21,7 @@ public class SiteHistory implements java.io.Serializable {
 	private SiteHistory() {
   }
 
-  public  SiteHistory( String name_site, Date last_record, Date first_record ) {
+  public  SiteHistory( String name_site, MyDate last_record, MyDate first_record ) {
     siteName        = name_site;
     lastRecord      = last_record;
     firstRecord     = first_record;
@@ -41,19 +40,19 @@ public class SiteHistory implements java.io.Serializable {
   public MonthData getLastMonth( ) {
     return this.lastMonth ;
   }
-  public void updateLastRecordDate( Date d ) {
+  public void updateLastRecordDate( MyDate d ) {
     this.lastRecord = d;
   }
-  public Date getLastRecordDate( ) {
+  public MyDate getLastRecordDate( ) {
     return  this.lastRecord;
   }
-  public Date getFirstRecordDate( ) {
+  public MyDate getFirstRecordDate( ) {
     return  this.firstRecord;
   }
   public String getName( ) {
     return this.siteName;
   }
-  public boolean allReadyParse( Date d) {
+  public boolean allReadyParse( MyDate d) {
     return d.before( lastRecord ) || d.equals( lastRecord ) ;
   }
   public StringBuilder getSummary() {
@@ -88,8 +87,8 @@ public class SiteHistory implements java.io.Serializable {
       output.append( "<month>\n" );
       output.append( "<name>" ).append( Constants.getMonth ( month ) ).append( "</name>\n" );
       output.append( "<number>" ).append( (1+ month) ).append( "</number>\n" );
-      output.append( "<year>" ).append( (1900+ year) ).append( "</year>" );
-      String filename =  "usage_" + ( year + 1900 ) + "" + ( month+1<10 ? "0" : "" ) + (month+1) + ".xml";
+      output.append( "<year>" ).append( year ).append( "</year>" );
+      String filename =  "usage_" + year + "" + ( month+1<10 ? "0" : "" ) + (month+1) + ".xml";
       output.append( "<url>" ).append( filename ).append( "</url>\n" );
       output.append( "<hits>" ).append( totalHits ).append( "</hits>\n" );
       output.append( "<files>" ).append( totalFiles ).append( "</files>\n" );

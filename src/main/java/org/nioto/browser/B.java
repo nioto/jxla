@@ -49,10 +49,10 @@ public class B {
   public static String BROWSER_REGEXP = getBrowserRegexp ();
   
   public static String getShortName ( String s ) {
-    return (String)_browsers.get ( s );
+    return _browsers.get ( s );
   }
   public static String getLongName ( String shortName ) {
-    return (String)_shortnameToLongname.get ( shortName );
+    return _shortnameToLongname.get ( shortName );
   }
   public static String getBrowserRegexp () {
     //    Set keys = _browsers.keySet ();

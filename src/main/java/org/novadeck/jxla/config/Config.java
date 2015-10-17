@@ -68,10 +68,12 @@ public class Config {
     
     Collection<String> col = new ArrayList<String>();
     String[] list = f.list();
-    for (int i=0; i<list.length; i++) {
-      if ( pFiles.matcher(list[i]).matches() ) {
-        col.add( directory + (directory.endsWith("/")?  "":"/") + list[i] );
-      }
+    if( list != null) {
+	    for (int i=0; i<list.length; i++) {
+	      if ( pFiles.matcher(list[i]).matches() ) {
+	        col.add( directory + (directory.endsWith("/")?  "":"/") + list[i] );
+	      }
+	    }
     }
     logsFiles = col.toArray( new String[0]);
   }

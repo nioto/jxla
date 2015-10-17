@@ -1,13 +1,11 @@
 package org.novadeck.jxla.data;
 
 
-import java.util.Date;
-
 import org.novadeck.jxla.config.Config;
 import org.novadeck.jxla.tools.SearchEngine;
 
 public class Line {
-  private Date    _date = new Date(0);
+  private MyDate    _date = new MyDate(0);
   private String  _host;
   private String  _remoteIP;
   private String  _uri;
@@ -52,8 +50,6 @@ public class Line {
     INSTANCE._date.setHours ( hour );
     INSTANCE._date.setDate( day );
     INSTANCE._date.setMonth( month );
-    if ( year >1900)
-        year = year - 1900;
     INSTANCE._date.setYear( year );
 /*    if ( Config.dnsEnable){
       INSTANCE._remoteIP   = Config.dnsDumpFile.gethostName( remoteIp );
@@ -101,7 +97,7 @@ public class Line {
 
 
 
-  public Date getLogDate(){
+  public MyDate getLogDate(){
     return  _date;
   }
 

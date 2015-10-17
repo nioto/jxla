@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +17,7 @@ import java.util.zip.GZIPInputStream;
 import org.novadeck.jxla.config.Config;
 import org.novadeck.jxla.data.GeneralLogData;
 import org.novadeck.jxla.data.Line;
+import org.novadeck.jxla.data.MyDate;
 import org.novadeck.jxla.data.RegexpData;
 import org.novadeck.jxla.data.Site;
 import org.novadeck.jxla.tools.History;
@@ -58,7 +58,7 @@ public class Main
         TODAY.set( Calendar.MINUTE, 0);
         TODAY.set( Calendar.SECOND, 0);
         TODAY.set( Calendar.MILLISECOND, 0);
-        Date NOW = TODAY.getTime();
+        MyDate NOW = new MyDate( TODAY );
         
         //Date NOW = new Date ();
        // NOW = new Date ( NOW.getYear (), NOW.getMonth (), NOW.getDate (), 0,0,0 );
@@ -161,7 +161,7 @@ public class Main
      *Dont use global information
      */
         // search the first date to dump
-        Date _beginTMP = new Date ();
+        MyDate _beginTMP = new MyDate ();
         for ( int k=0; k < list.length; k++ )
         {
             Site s = Site.getSite ( list[k] );
@@ -171,12 +171,12 @@ public class Main
         _beginTMP.setMinutes (0);
         _beginTMP.setSeconds (0);
         
-        Date _prev ;
+        MyDate _prev ;
         Map<String, Output> files = new HashMap <String, Output>();
         for ( int k=0; k < list.length; k++ )
         {
-            _prev = new Date (1);
-            Date _begin = new Date ( _beginTMP.getTime () ) ;
+            _prev = new MyDate (1);
+            MyDate _begin = new MyDate(_beginTMP );
             
             Site site = Site.getSite ( list[k] );
             String path = Config.siteConfig.getMainDirForGeneralStat ( site.getName () );
@@ -192,7 +192,7 @@ public class Main
                     {
                     		StringBuilder sb  = site.getMonthData ( _begin.getMonth (), _begin.getYear () );
                         if (sb != null) {
-                            String currentDir = path + "/" + (1900+_begin.getYear ()) + "/" +(1+_begin.getMonth ()) +"/";
+                            String currentDir = path + "/" + (_begin.getYear ()) + "/" +(1+_begin.getMonth ()) +"/";
                             String summaryPage = currentDir + Config.summaryPageName;
                             Output _month ;
                             if ( ! files.containsKey ( summaryPage ) ) {
@@ -215,7 +215,7 @@ public class Main
                         }
                     }
                     _prev   = _begin;
-                    _begin  = new Date ( _prev.getTime ()+24*60*60*1000 );
+                    _begin  = new MyDate ( _prev.getTime ()+24*60*60*1000 );
                 }
             } catch (Exception e ) {
                 e.printStackTrace ();

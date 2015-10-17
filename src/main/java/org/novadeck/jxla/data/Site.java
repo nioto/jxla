@@ -4,7 +4,6 @@ package org.novadeck.jxla.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,8 +21,8 @@ public class Site {
     private String  _name;
     private List<MonthData> _months = new ArrayList<MonthData>();
     
-    private Date lastLogDate  = null;
-    private Date beginLogDate  = null;
+    private MyDate lastLogDate  = null;
+    private MyDate beginLogDate  = null;
     
     SiteHistory _history      = null;
     //============================================================================
@@ -38,7 +37,7 @@ public class Site {
     public void setName(String s ) {
         _name= s;
     }
-    public Date getFirstLogDate() {
+    public MyDate getFirstLogDate() {
         if ( _history != null)
             return _history.getFirstRecordDate();
         else
@@ -55,16 +54,16 @@ public class Site {
     //============================================================================
     //--------
     public void addHit( Line l ) {
-        Date currentLineDate = l.getLogDate();
+        MyDate currentLineDate = l.getLogDate();
         if (beginLogDate == null ||  beginLogDate.after( currentLineDate )) {
-            beginLogDate = (Date)currentLineDate.clone();
+            beginLogDate = new MyDate( currentLineDate );
         }
         
         if ( (_history != null) && _history.allReadyParse( currentLineDate ) ) {
             return ;
         }
         if ( (lastLogDate == null) || lastLogDate.before( currentLineDate ) ) {
-            lastLogDate = (Date)currentLineDate.clone();
+            lastLogDate = new MyDate( currentLineDate );
         }
         int mm = currentLineDate.getMonth() ;
         int yy = currentLineDate.getYear()  ;
